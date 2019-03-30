@@ -15,7 +15,7 @@ for (let i = 0; i < size; i++) {
     
     // adding image does NOT work well on board over 4x4 (like 6x6):
     //html += `<td><a id=\'${i}${j}\'><img src=${board[i][j]}-80.png display=${board[i][j] === ' ' ?  'none': 'block'}></a></td>`;
-    html += `<td id=[${i}][${j}]><img src="piece-1.gif" border=0 width="47" height="47"></img></td>`
+    html += `<td id=[${i}][${j}]><img src="piece-0.gif" border=0 width="47" height="47"></img></td>`
   } 
 
   html += "</tr>";
