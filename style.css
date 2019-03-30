@@ -1,0 +1,47 @@
+#myBoard {
+    border-collapse: collapse;
+    border: 3px solid black;
+}
+
+#myBoard td {
+    width: 30px;
+    height: 30px;
+}
+
+#myBoard tr:nth-child(even) td:nth-child(even){
+    background-color: mediumturquoise;
+}
+
+#myBoard tr:nth-child(odd) td:nth-child(odd){
+    background-color: mediumturquoise;
+}
+
+#myBoard tr:nth-child(odd) td:nth-child(even){
+    background-color: deeppink;
+}
+
+#myBoard tr:nth-child(even) td:nth-child(odd){
+    background-color: deeppink;
+}
+
+#myBoard tr:nth-child(even) td:hover:nth-child(odd){
+    background-color: rgb(122, 9, 52);
+}
+    
+#myBoard tr:nth-child(odd) td:hover:nth-child(even){
+    background-color: rgb(122, 9, 52);
+}
+
+#myBoard tr:nth-child(even) td:hover:nth-child(even){
+    background-color: rgb(8, 167, 161);
+}
+
+#myBoard tr:nth-child(odd) td:hover:nth-child(odd){
+    background-color: rgb(8, 167, 161);
+}
+
+#myBoard td{
+    border: 1px solid black;
+    padding: 8px;
+    
+}
