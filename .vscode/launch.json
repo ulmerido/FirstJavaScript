@@ -23,7 +23,7 @@
             "type": "browser-preview",
             "request": "attach",
             "name": "Browser Preview: Attach",
-            "webRoot": "${workspaceFolder}"
+            //"webRoot": "${workspaceFolder}"
         },
 
         {
