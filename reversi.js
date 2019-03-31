@@ -13,14 +13,14 @@ const ePawnType =
 {
   Black: 'B',
   White: 'W',
-  Empty: "",
+  Empty: null,
 };
 
 const k_SquareSize = 45;
 const k_Size = 10;
-let   g_Board = null;
-let   g_PlayerTurnImg = ePawnImageSrc.White;
-let   g_PlayerTurnType = ePawnType.White;
+let g_Board = null;
+let g_PlayerTurnImg = ePawnImageSrc.White;
+let g_PlayerTurnType = ePawnType.White;
 
 
 function createGameTable()
@@ -33,7 +33,7 @@ function createGameTable()
     html += "<tr>";
     for (let j = 0; j < k_Size; j++)
     {
-      html += `<td id=cell[${ i }][${ j }]><img id=img[${ i }][${ j }] src="piece-0.gif" border=0 width=${k_SquareSize} height=${k_SquareSize}></img></td>`;
+      html += `<td id=cell[${ i }][${ j }]><img id=img[${ i }][${ j }] src="piece-0.gif" border=0 width=${ k_SquareSize } height=${ k_SquareSize }></img></td>`;
     }
 
     html += "</tr>";
@@ -55,11 +55,14 @@ function linkBoardToHTML()
       {
         Pawn: null,
         Cell: document.getElementById(`cell[${ i }][${ j }]`),
-        Img:  document.getElementById(`img[${ i }][${ j }]`)
+        Img: document.getElementById(`img[${ i }][${ j }]`)
       }
 
       logicGameBoard[i][j] = GameCell;
-      GameCell.Cell.addEventListener('mouseenter', function(){MouseEnter(i,j);})
+      GameCell.Cell.addEventListener('mouseleave', function () { MouseLeave(i, j); });
+      GameCell.Cell.addEventListener('mouseenter', function () { MouseEnter(i, j); });
+      GameCell.Cell.addEventListener('click', function () { MouseClick(i, j); });
+
     }
   }
 
@@ -68,14 +71,14 @@ function linkBoardToHTML()
 
 function SetCellWithNewPawn(i_Cell, i_PawnType)
 {
-  switch(i_PawnType)
+  switch (i_PawnType)
   {
-    case(ePawnType.Black):
+    case (ePawnType.Black):
       i_Cell.Img.src = ePawnImageSrc.Black;
       i_Cell.Pawn = ePawnType.Black;
       break;
 
-    case(ePawnType.White):
+    case (ePawnType.White):
       i_Cell.Img.src = ePawnImageSrc.White;
       i_Cell.Pawn = ePawnType.White;
       break;
@@ -95,8 +98,8 @@ function initBoard()
 
 function MouseEnter(i, j)
 {
-  let isValid = isValidMove();
-  if(isValid)
+  let isValid = isValidMove(i, j);
+  if (isValid && g_Board[i][j].Pawn === null)
   {
     g_Board[i][j].Img.src = g_PlayerTurnImg;
   }
@@ -106,9 +109,34 @@ function MouseEnter(i, j)
   }
 }
 
-function isValidMove(i,j)
+function MouseLeave(i, j)
 {
-  return true;
+  if (isValidMove(i, j) && g_Board[i][j].Pawn === null)
+  {
+    g_Board[i][j].Img.src = ePawnImageSrc.Empty;
+  }
+}
+
+function isValidMove(i, j)
+{
+  let x, y;
+  let valid = false;
+  for (x = -1; x < 2; x++)
+  {
+    for (y = -1; y < 2; y++)
+    {
+      if ((i + x > 0) && (j + y > 0))
+      {
+        if (g_Board[i + x][j + y].Pawn !== null && (x !== 0 || y !== 0))
+        {
+          valid = true;
+          break;
+        }
+      }
+    }
+  }
+
+  return valid;
 }
 
 let Ctr = (function () 
@@ -116,3 +144,92 @@ let Ctr = (function ()
   initBoard();
 })();
 
+function getExpectedNewPawns(i, j)
+{
+  let x, y;
+  let matrix = Array(k_Size);
+  for (x = 0; x < k_Size; x++)
+  {
+    matrix[x] = Array(k_Size);
+    for (y = 0; y < k_Size; y++)
+    {
+      matrix[x][y] = null;
+    }
+  }
+
+  for (x = -1; x < 2; x++)
+  {
+    for (y = -1; y < 2; y++)
+    {
+      if ((i + x > 0) && (j + y > 0))
+      {
+        if(x!==0 || y!==0)
+        {
+          addPoss(x,y,i,j,matrix);
+        }
+      }
+    }
+  }
+    return matrix;
+}
+
+function addPoss(colAdd, rowAdd, i, j, matrix)
+{
+  let x = i;
+  let y = j;
+  let foundPawn = false;
+  y += colAdd;
+  x += rowAdd;
+  while (x >= 0 && y >= 0 && x < k_Size && y < k_Size)
+  {  
+    if(g_Board[x][y].Pawn === g_PlayerTurnType)
+    {
+      foundPawn = true;
+      break;
+    }
+    y += colAdd;
+    x += rowAdd;
+  }
+
+  if(foundPawn)
+  {
+    x=i;
+    y=j;
+    while (x >= 0 && y >= 0 && x < k_Size && y < k_Size)
+    {
+      y += colAdd;
+      x += rowAdd;
+      if(g_Board[x][j].Pawn === g_PlayerTurnType)
+      {        
+        break;
+      }
+      else
+      {
+        matrix[x][y] = g_PlayerTurnType;
+      }
+    }
+  }
+}
+
+function MouseClick(i, j)
+{
+  if(isValidMove(i,j))
+  {
+    let x, y;
+    let possMatrix = getExpectedNewPawns(i,j);
+    for(x=0;x<k_Size;x++)
+    {
+      for(y=0;y<k_Size;y++)
+      {
+        if(possMatrix[x][y]!==null)
+        {
+          SetCellWithNewPawn(g_Board[x][y], g_PlayerTurnType);
+        }
+      }
+    }
+
+    g_PlayerTurnImg = ePawnImageSrc.Black;
+    g_PlayerTurnType = ePawnType.Black;
+  }
+  
+}
