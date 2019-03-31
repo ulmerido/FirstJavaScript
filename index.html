@@ -7,11 +7,41 @@
     <title>Document</title>
   </head>
   <body>
-    <div>
-      <table id="myBoard"></table>
-      <h2 id="myH2"></h2>
-      <h1>hi there!!!</h1>
+    <div class="flex-container">
+      <div class="gameBoard">
+          <table id="myBoard"></table>
+      </div>
+    
+      <div class="scoreBoard">
+        <table id="myScoreBoard">
+          <tr>
+            <td>time</td>
+          </tr>
+          <tr>
+            <td>turns</td>
+          </tr>
+          <tr>
+            <td>
+              <table id="playerStats">
+                <tr>
+                  <td class="player1">player 1: 2 pawns #times</td>
+                  <td class="player2">player 2: 2 pawns #times</td>
+                </tr>
+                <tr>
+                  <td class="player1">player 1: average time</td>
+                  <td class="player2">player 2: average time</td>
+                </tr>
+                <tr>
+                  <td class="player1">player 1: score</td>
+                  <td class="player2">player 2: score</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
+    
 
     <script src="reversi.js" type="text/javascript"></script>
     <link rel="stylesheet" href="style.css" />

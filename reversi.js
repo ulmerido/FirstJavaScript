@@ -1,7 +1,5 @@
 //  @ts-check
 
-var h = document.getElementById("myH2");
-h.insertAdjacentHTML("afterbegin", "<span style='color:red'>My span</span>");
 const ePawnImageSrc =
 {
   Black: "piece-1.gif",
@@ -17,7 +15,7 @@ const ePawnType =
 };
 
 const k_SquareSize = 45;
-const k_Size = 10;
+const k_Size = 10
 let g_Board = null;
 let g_PlayerTurnImg = ePawnImageSrc.White;
 let g_PlayerTurnType = ePawnType.White;
@@ -163,14 +161,14 @@ function getExpectedNewPawns(i, j)
     {
       if ((i + x > 0) && (j + y > 0))
       {
-        if(x!==0 || y!==0)
+        if (x !== 0 || y !== 0)
         {
-          addPoss(x,y,i,j,matrix);
+          addPoss(x, y, i, j, matrix);
         }
       }
     }
   }
-    return matrix;
+  return matrix;
 }
 
 function addPoss(colAdd, rowAdd, i, j, matrix)
@@ -181,8 +179,8 @@ function addPoss(colAdd, rowAdd, i, j, matrix)
   y += colAdd;
   x += rowAdd;
   while (x >= 0 && y >= 0 && x < k_Size && y < k_Size)
-  {  
-    if(g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    if (g_Board[x][y].Pawn === g_PlayerTurnType)
     {
       foundPawn = true;
       break;
@@ -191,16 +189,16 @@ function addPoss(colAdd, rowAdd, i, j, matrix)
     x += rowAdd;
   }
 
-  if(foundPawn)
+  if (foundPawn)
   {
-    x=i;
-    y=j;
+    x = i;
+    y = j;
     while (x >= 0 && y >= 0 && x < k_Size && y < k_Size)
     {
       y += colAdd;
       x += rowAdd;
-      if(g_Board[x][j].Pawn === g_PlayerTurnType)
-      {        
+      if (g_Board[x][j].Pawn === g_PlayerTurnType)
+      {
         break;
       }
       else
@@ -213,15 +211,15 @@ function addPoss(colAdd, rowAdd, i, j, matrix)
 
 function MouseClick(i, j)
 {
-  if(isValidMove(i,j))
+  if (isValidMove(i, j))
   {
     let x, y;
-    let possMatrix = getExpectedNewPawns(i,j);
-    for(x=0;x<k_Size;x++)
+    let possMatrix = getExpectedNewPawns(i, j);
+    for (x = 0; x < k_Size; x++)
     {
-      for(y=0;y<k_Size;y++)
+      for (y = 0; y < k_Size; y++)
       {
-        if(possMatrix[x][y]!==null)
+        if (possMatrix[x][y] !== null)
         {
           SetCellWithNewPawn(g_Board[x][y], g_PlayerTurnType);
         }
@@ -231,5 +229,5 @@ function MouseClick(i, j)
     g_PlayerTurnImg = ePawnImageSrc.Black;
     g_PlayerTurnType = ePawnType.Black;
   }
-  
+
 }
