@@ -16,7 +16,9 @@
         <div class="scoreBoard">
           <table id="myScoreBoard">
             <tr>
-              <td>time</td>
+              <td>
+                <p id="time"> Time : <label id="minutes">00</label>:<label id="seconds">00</label></p> 
+              </td>
             </tr>
             <tr>
               <td>turns</td>
@@ -43,8 +45,13 @@
         </div>
 
         <div class="control-panel">
-          <input type="checkbox" name="Trainer Mode" onchange="executeTrainerMode()">Trainer Mode
-        
+          <div>
+            <input type="checkbox" name="Trainer Mode" onchange="executeTrainerMode()">Trainer Mode
+          </div>
+          <div id="timer-control">
+            <button id="start" onclick="startGame()"> Start </button> 
+            <button id="stop" onclick="endGame()"> Stop </button>
+          </div>
         </div>
       </div>
   </div>
@@ -54,3 +61,4 @@
     <link rel="stylesheet" href="style.css" />
   </body>
 </html>
+

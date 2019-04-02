@@ -1,6 +1,7 @@
 .flex-container {
     display: flex;
-    flex-direction: row;    
+    flex-direction: row; 
+    flex-wrap: wrap;   
 }
 
 .flex-container > div {
@@ -9,10 +10,21 @@
 
 .flex-container2 {
     display: flex;
-    flex-direction: column;    
+    flex-direction: column; 
+    flex-wrap: wrap;   
 }
 
 .flex-container2 > div {
+    margin: 10px;
+}
+
+.control-panel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+control-panel > * {
     margin: 10px;
 }
 
@@ -41,10 +53,6 @@
     border: 3px solid black;
     margin: 0px;
     padding: 0px;
-}
-
-#playerStats td {
-    
 }
 
 #playerStars tr {

@@ -28,6 +28,7 @@ let g_Board = null;
 let g_PlayerTurnImg = ePawnImageSrc.White;
 let g_PlayerTurnType = ePawnType.White;
 let g_TrainerMode = false;
+let g_Timer;
 
 
 function changeTurn()
@@ -189,7 +190,7 @@ function isValidMove(i, j)
   {
     for (y = -1; y < 2; y++)
     {
-      if ((i + x > 0) && (j + y > 0))
+      if (((i + x >= 0) && (j + y >= 0)) && (i + x < k_Size) && (j + y < k_Size))
       {
         if (g_Board[i + x][j + y].Pawn !== null && (x !== 0 || y !== 0))
         {
@@ -284,13 +285,13 @@ function findCells(i, j)
 
   x++;
   y++;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  while (x < k_Size && y < k_Size && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x++;
     y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x < k_Size && y < k_Size && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -309,13 +310,13 @@ function findCells(i, j)
 
   x--;
   y++;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  while (x > 0 && y < k_Size && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x--;
     y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x > 0 && y < k_Size && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -334,13 +335,13 @@ function findCells(i, j)
 
   x--;
   y--;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  while (x > 0 && y > 0 && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x--;
     y--;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x > 0 && y > 0 && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -359,13 +360,13 @@ function findCells(i, j)
 
   x++;
   y--;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  while (x < k_Size && y > 0 && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x++;
     y--;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x < k_Size && y > 0 && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -383,13 +384,13 @@ function findCells(i, j)
   y = j;
 
   y++;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && y < k_Size)
+  while (y < k_Size && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     //x++;
     y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (y < k_Size && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -407,13 +408,13 @@ function findCells(i, j)
   y = j;
 
   y--;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  while (y > 0 && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     //x--;
     y--;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (y > 0 && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -431,13 +432,13 @@ function findCells(i, j)
   y = j;
 
   x--;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  while (x > 0 && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x--;
     //y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x > 0 && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -455,13 +456,13 @@ function findCells(i, j)
   y = j;
 
   x++;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  while (x < k_Size && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x++;
     //y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x < k_Size && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -514,13 +515,13 @@ function findCellsHover(i, j)
 
   x++;
   y++;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  while (x < k_Size && y < k_Size && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x++;
     y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x < k_Size && y < k_Size && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -540,13 +541,13 @@ function findCellsHover(i, j)
 
   x--;
   y++;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  while (x > 0 && y < k_Size && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x--;
     y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x > 0 && y < k_Size && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -566,13 +567,13 @@ function findCellsHover(i, j)
 
   x--;
   y--;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  while (x > 0 && y > 0 && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x--;
     y--;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x > 0 && y > 0 && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -592,13 +593,13 @@ function findCellsHover(i, j)
 
   x++;
   y--;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  while (x < k_Size && y > 0 && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x++;
     y--;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x < k_Size && y > 0 && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -617,13 +618,13 @@ function findCellsHover(i, j)
   y = j;
 
   y++;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && y < k_Size)
+  while (y < k_Size && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     //x++;
     y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (y < k_Size && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -642,13 +643,13 @@ function findCellsHover(i, j)
   y = j;
 
   y--;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  while (y > 0 && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     //x--;
     y--;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (y > 0 && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -667,13 +668,13 @@ function findCellsHover(i, j)
   y = j;
 
   x--;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  while (x > 0 && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x--;
     //y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x > 0 && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -692,13 +693,13 @@ function findCellsHover(i, j)
   y = j;
 
   x++;
-  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  while (x < k_Size && g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty)
   {
     x++;
     //y++;
   }
 
-  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  if (x < k_Size && g_Board[x][y].Pawn === g_PlayerTurnType)
   {
     let t = i;
     let s = j;
@@ -712,5 +713,47 @@ function findCellsHover(i, j)
     }
   }
 }
+
+function startGame()
+{
+  startTimer();
+}
+
+function startTimer()
+{ 
+  // @ts-ignore
+  document.getElementById("start").disabled = true;
+  let minutesLabel = document.getElementById("minutes");
+  let secondsLabel = document.getElementById("seconds");
+  let totalSeconds = 0;
+  let timer = setInterval(setTime, 1000);
+  g_Timer = timer;
+
+  function setTime() {
+  ++totalSeconds;
+  secondsLabel.innerHTML = pad(totalSeconds % 60);
+  // @ts-ignore
+  minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+  }
+};
+
+function pad(val) {
+  let valString = val + "";
+  if (valString.length < 2) {
+    return "0" + valString;
+  } else {
+    return valString;
+  }
+}
+
+function endGame()
+{
+  // @ts-ignore
+  document.getElementById("start").disabled = false;
+  clearInterval(g_Timer);
+  document.getElementById("minutes").innerHTML = "00";
+  document.getElementById("seconds").innerHTML = "00";
+}
+
 
 
