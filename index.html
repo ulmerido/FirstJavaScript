@@ -12,35 +12,42 @@
           <table id="myBoard"></table>
       </div>
     
-      <div class="scoreBoard">
-        <table id="myScoreBoard">
-          <tr>
-            <td>time</td>
-          </tr>
-          <tr>
-            <td>turns</td>
-          </tr>
-          <tr>
-            <td>
-              <table id="playerStats">
-                <tr>
-                  <td class="player1">player 1: 2 pawns #times</td>
-                  <td class="player2">player 2: 2 pawns #times</td>
-                </tr>
-                <tr>
-                  <td class="player1">player 1: average time</td>
-                  <td class="player2">player 2: average time</td>
-                </tr>
-                <tr>
-                  <td class="player1">player 1: score</td>
-                  <td class="player2">player 2: score</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
+      <div class="flex-container2">
+        <div class="scoreBoard">
+          <table id="myScoreBoard">
+            <tr>
+              <td>time</td>
+            </tr>
+            <tr>
+              <td>turns</td>
+            </tr>
+            <tr>
+              <td>
+                <table id="playerStats">
+                  <tr>
+                    <td class="player1">player 1: 2 pawns #times</td>
+                    <td class="player2">player 2: 2 pawns #times</td>
+                  </tr>
+                  <tr>
+                    <td class="player1">player 1: average time</td>
+                    <td class="player2">player 2: average time</td>
+                  </tr>
+                  <tr>
+                    <td class="player1">player 1: score</td>
+                    <td class="player2">player 2: score</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="control-panel">
+          <input type="checkbox" name="Trainer Mode" onchange="executeTrainerMode()">Trainer Mode
+        
+        </div>
       </div>
-    </div>
+  </div>
     
 
     <script src="reversi.js" type="text/javascript"></script>

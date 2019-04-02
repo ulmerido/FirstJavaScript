@@ -14,12 +14,47 @@ const ePawnType =
   Empty: null,
 };
 
+/*
+const eCellColors =
+{
+  Type1: 'deeppink',
+  Type2: 'mediumtoturquoise',
+};
+*/
+
 const k_SquareSize = 45;
 const k_Size = 10
 let g_Board = null;
 let g_PlayerTurnImg = ePawnImageSrc.White;
 let g_PlayerTurnType = ePawnType.White;
+let g_TrainerMode = false;
 
+
+function changeTurn()
+{
+  if (g_PlayerTurnType === ePawnType.White)
+  {
+    g_PlayerTurnType = ePawnType.Black;
+    g_PlayerTurnImg = ePawnImageSrc.Black;
+  }
+  else
+  {
+    g_PlayerTurnType = ePawnType.White;
+    g_PlayerTurnImg = ePawnImageSrc.White;
+  }
+}
+
+function executeTrainerMode()
+{
+  if(g_TrainerMode === false)
+  {
+    g_TrainerMode = true;
+  }
+  else
+  {
+    g_TrainerMode = false;
+  }
+}
 
 function createGameTable()
 {
@@ -31,7 +66,7 @@ function createGameTable()
     html += "<tr>";
     for (let j = 0; j < k_Size; j++)
     {
-      html += `<td id=cell[${ i }][${ j }]><img id=img[${ i }][${ j }] src="piece-0.gif" border=0 width=${ k_SquareSize } height=${ k_SquareSize }></img></td>`;
+      html += `<td id=cell[${ j }][${ i }]><img id=img[${ j }][${ i }] src="piece-0.gif" border=0 width=${ k_SquareSize } height=${ k_SquareSize }></img></td>`;
     }
 
     html += "</tr>";
@@ -51,9 +86,10 @@ function linkBoardToHTML()
     {
       let GameCell =
       {
-        Pawn: null,
+        Pawn: ePawnType.Empty,
         Cell: document.getElementById(`cell[${ i }][${ j }]`),
-        Img: document.getElementById(`img[${ i }][${ j }]`)
+        Img: document.getElementById(`img[${ i }][${ j }]`),
+        //CellColor: document.getElementById(`cell[${ i }][${ j }]`).style.backgroundColor
       }
 
       logicGameBoard[i][j] = GameCell;
@@ -101,24 +137,54 @@ function MouseEnter(i, j)
   {
     g_Board[i][j].Img.src = g_PlayerTurnImg;
   }
-  else
+  if(g_TrainerMode)
   {
-
+    findCellsHover(i, j);
   }
+  
 }
 
 function MouseLeave(i, j)
 {
+  for (let x = 0; x < k_Size; x++)
+  {
+    for (let y = 0; y< k_Size ; y++)
+    {
+      if(g_Board[x][y].Pawn === ePawnType.White)
+      {
+        g_Board[x][y].Img.src = ePawnImageSrc.White;
+      }
+      else if(g_Board[x][y].Pawn === ePawnType.Black)
+      {
+        g_Board[x][y].Img.src = ePawnImageSrc.Black;
+      }
+      else if(g_Board[x][y].Pawn === ePawnType.Empty)
+      {
+        g_Board[x][y].Img.src = ePawnImageSrc.Empty;
+      }/*
+      else if(g_Board[x][y].CellColor === eCellColors.Type1)
+      {
+        g_Board[x][y].Cell.style.backgroundcolor = eCellColors.Type1;
+      }
+      else if(g_Board[x][y].CellColor === eCellColors.Type2)
+      {
+        g_Board[x][y].Cell.style.backgroundcolor = eCellColors.Type2;
+      }*/
+    }
+  }
+  /*
   if (isValidMove(i, j) && g_Board[i][j].Pawn === null)
   {
     g_Board[i][j].Img.src = ePawnImageSrc.Empty;
   }
+  */
 }
 
 function isValidMove(i, j)
 {
   let x, y;
   let valid = false;
+
   for (x = -1; x < 2; x++)
   {
     for (y = -1; y < 2; y++)
@@ -133,7 +199,6 @@ function isValidMove(i, j)
       }
     }
   }
-
   return valid;
 }
 
@@ -142,6 +207,7 @@ let Ctr = (function ()
   initBoard();
 })();
 
+/*
 function getExpectedNewPawns(i, j)
 {
   let x, y;
@@ -170,6 +236,7 @@ function getExpectedNewPawns(i, j)
   }
   return matrix;
 }
+
 
 function addPoss(colAdd, rowAdd, i, j, matrix)
 {
@@ -208,11 +275,215 @@ function addPoss(colAdd, rowAdd, i, j, matrix)
     }
   }
 }
+*/
+function findCells(i, j)
+{
+  //diagonal right down
+  let x = i;
+  let y = j;
+
+  x++;
+  y++;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  {
+    x++;
+    y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t < x; t++)
+    {
+      g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      s++;
+    }
+  }
+
+  //diagonal left down
+  x = i;
+  y = j;
+
+  x--;
+  y++;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  {
+    x--;
+    y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t > x; t--)
+    {
+      g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      s++;
+    }
+  }
+
+  //diagonal left up
+  x = i;
+  y = j;
+
+  x--;
+  y--;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  {
+    x--;
+    y--;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t > x; t--)
+    {
+      g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      s--;
+    }
+  }
+
+  //diagonal right up
+  x = i;
+  y = j;
+
+  x++;
+  y--;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  {
+    x++;
+    y--;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t < x; t++)
+    {
+      g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      s--;
+    }
+  }
+
+  //down
+  x = i;
+  y = j;
+
+  y++;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && y < k_Size)
+  {
+    //x++;
+    y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (s = j; s < y; s++)
+    {
+      g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //s++;
+    }
+  }
+
+  //up
+  x = i;
+  y = j;
+
+  y--;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  {
+    //x--;
+    y--;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (s = j; s > y; s--)
+    {
+      g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //s++;
+    }
+  }
+
+  //left
+  x = i;
+  y = j;
+
+  x--;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  {
+    x--;
+    //y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t > x; t--)
+    {
+      g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //s++;
+    }
+  }
+
+  //right
+  x = i;
+  y = j;
+
+  x++;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  {
+    x++;
+    //y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t < x; t++)
+    {
+      g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //s++;
+    }
+  }
+}
 
 function MouseClick(i, j)
 {
+
   if (isValidMove(i, j))
   {
+    findCells(i, j);
+    SetCellWithNewPawn(g_Board[i][j], g_PlayerTurnType);
+    changeTurn();
+    /*
     let x, y;
     let possMatrix = getExpectedNewPawns(i, j);
     for (x = 0; x < k_Size; x++)
@@ -225,9 +496,221 @@ function MouseClick(i, j)
         }
       }
     }
+    */
 
-    g_PlayerTurnImg = ePawnImageSrc.Black;
-    g_PlayerTurnType = ePawnType.Black;
+
+    //g_PlayerTurnImg = ePawnImageSrc.Black;
+    //g_PlayerTurnType = ePawnType.Black;
   }
 
+
 }
+
+function findCellsHover(i, j)
+{
+  //diagonal right down
+  let x = i;
+  let y = j;
+
+  x++;
+  y++;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  {
+    x++;
+    y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t < x; t++)
+    {
+      //g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+     // g_Board[t][s].Cell.style.backgroundColor = "green";
+      s++;
+    }
+  }
+
+  //diagonal left down
+  x = i;
+  y = j;
+
+  x--;
+  y++;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  {
+    x--;
+    y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t > x; t--)
+    {
+      //g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //g_Board[t][s].Cell.style.backgroundColor = "green";
+      s++;
+    }
+  }
+
+  //diagonal left up
+  x = i;
+  y = j;
+
+  x--;
+  y--;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  {
+    x--;
+    y--;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t > x; t--)
+    {
+      //g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //g_Board[t][s].Cell.style.backgroundColor = "green";
+      s--;
+    }
+  }
+
+  //diagonal right up
+  x = i;
+  y = j;
+
+  x++;
+  y--;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  {
+    x++;
+    y--;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t < x; t++)
+    {
+      //g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //g_Board[t][s].Cell.style.backgroundColor = "green";
+      s--;
+    }
+  }
+
+  //down
+  x = i;
+  y = j;
+
+  y++;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && y < k_Size)
+  {
+    //x++;
+    y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (s = j; s < y; s++)
+    {
+      //g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //g_Board[t][s].Cell.style.backgroundColor = "green";
+      //s++;
+    }
+  }
+
+  //up
+  x = i;
+  y = j;
+
+  y--;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  {
+    //x--;
+    y--;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (s = j; s > y; s--)
+    {
+      //g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //g_Board[t][s].Cell.style.backgroundColor = "green";
+      //s++;
+    }
+  }
+
+  //left
+  x = i;
+  y = j;
+
+  x--;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x >= 0)
+  {
+    x--;
+    //y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t > x; t--)
+    {
+      //g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //g_Board[t][s].Cell.style.backgroundColor = "green";
+      //s++;
+    }
+  }
+
+  //right
+  x = i;
+  y = j;
+
+  x++;
+  while (g_Board[x][y].Pawn !== g_PlayerTurnType && g_Board[x][y].Pawn !== ePawnType.Empty && x < k_Size)
+  {
+    x++;
+    //y++;
+  }
+
+  if (g_Board[x][y].Pawn === g_PlayerTurnType)
+  {
+    let t = i;
+    let s = j;
+
+    for (t = i; t < x; t++)
+    {
+      //g_Board[t][s].Pawn = g_PlayerTurnType;
+      g_Board[t][s].Img.src = g_PlayerTurnImg;
+      //g_Board[t][s].Cell.style.backgroundColor = "green";
+      //s++;
+    }
+  }
+}
+
+

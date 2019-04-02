@@ -7,6 +7,15 @@
     margin: 10px;
 }
 
+.flex-container2 {
+    display: flex;
+    flex-direction: column;    
+}
+
+.flex-container2 > div {
+    margin: 10px;
+}
+
 .player1 {
     background-color: deeppink !important;
 }
