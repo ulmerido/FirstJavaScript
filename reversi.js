@@ -29,7 +29,18 @@ let g_PlayerTurnImg = ePawnImageSrc.White;
 let g_PlayerTurnType = ePawnType.White;
 let g_TrainerMode = false;
 let g_Timer;
+let g_Player1;
+let g_Player2;
 
+let stats = {
+  scorePlayer1: 2,
+  scorePlayer2: 2,
+  twoPawnsPlayer1: 1,
+  twoPawnsPlayer2: 1,
+  roundTimePlayer1: [],
+  roundTimePlayer2: [],
+  turnsNum: 0
+};
 
 function changeTurn()
 {
@@ -43,11 +54,60 @@ function changeTurn()
     g_PlayerTurnType = ePawnType.White;
     g_PlayerTurnImg = ePawnImageSrc.White;
   }
+
+  updateScore();
+  update2Pawns();
+  updateAverageTime();
 }
+
+function updateScore()
+{
+  let counter1 = 0;
+  let counter2 = 0;
+
+  for (let i = 0; i < k_Size; i++)
+  {
+    for (let j = 0; i < k_Size; j++)
+    {
+      if (g_Board[i][j].Pawn === ePawnType.Black)
+      {
+        counter1++;
+      }
+      if (g_Board[i][j].Pawn === ePawnType.White)
+      {
+        counter2++;
+      }
+    }
+
+    stats.scorePlayer1 = counter1;
+    stats.scorePlayer2 = counter2;
+  }
+}
+
+function update2Pawns()
+{
+  if (stats.scorePlayer1 === 2)
+  {
+    stats.twoPawnsPlayer1++;
+  }
+  if (stats.scorePlayer2 === 2)
+  {
+    stats.scorePlayer2++;
+  }
+}
+
+function updateAverageTime()
+{
+  
+  stats.roundTimePlayer1.forEach((timeSlot)=>{
+      
+  });
+}
+
 
 function executeTrainerMode()
 {
-  if(g_TrainerMode === false)
+  if (g_TrainerMode === false)
   {
     g_TrainerMode = true;
   }
@@ -138,28 +198,28 @@ function MouseEnter(i, j)
   {
     g_Board[i][j].Img.src = g_PlayerTurnImg;
   }
-  if(g_TrainerMode)
+  if (g_TrainerMode)
   {
     findCellsHover(i, j);
   }
-  
+
 }
 
 function MouseLeave(i, j)
 {
   for (let x = 0; x < k_Size; x++)
   {
-    for (let y = 0; y< k_Size ; y++)
+    for (let y = 0; y < k_Size; y++)
     {
-      if(g_Board[x][y].Pawn === ePawnType.White)
+      if (g_Board[x][y].Pawn === ePawnType.White)
       {
         g_Board[x][y].Img.src = ePawnImageSrc.White;
       }
-      else if(g_Board[x][y].Pawn === ePawnType.Black)
+      else if (g_Board[x][y].Pawn === ePawnType.Black)
       {
         g_Board[x][y].Img.src = ePawnImageSrc.Black;
       }
-      else if(g_Board[x][y].Pawn === ePawnType.Empty)
+      else if (g_Board[x][y].Pawn === ePawnType.Empty)
       {
         g_Board[x][y].Img.src = ePawnImageSrc.Empty;
       }/*
@@ -530,7 +590,7 @@ function findCellsHover(i, j)
     {
       //g_Board[t][s].Pawn = g_PlayerTurnType;
       g_Board[t][s].Img.src = g_PlayerTurnImg;
-     // g_Board[t][s].Cell.style.backgroundColor = "green";
+      // g_Board[t][s].Cell.style.backgroundColor = "green";
       s++;
     }
   }
@@ -720,7 +780,7 @@ function startGame()
 }
 
 function startTimer()
-{ 
+{
   // @ts-ignore
   document.getElementById("start").disabled = true;
   let minutesLabel = document.getElementById("minutes");
@@ -729,19 +789,23 @@ function startTimer()
   let timer = setInterval(setTime, 1000);
   g_Timer = timer;
 
-  function setTime() {
-  ++totalSeconds;
-  secondsLabel.innerHTML = pad(totalSeconds % 60);
-  // @ts-ignore
-  minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+  function setTime()
+  {
+    ++totalSeconds;
+    secondsLabel.innerHTML = pad(totalSeconds % 60);
+    // @ts-ignore
+    minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
   }
 };
 
-function pad(val) {
+function pad(val)
+{
   let valString = val + "";
-  if (valString.length < 2) {
+  if (valString.length < 2)
+  {
     return "0" + valString;
-  } else {
+  } else
+  {
     return valString;
   }
 }
