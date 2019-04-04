@@ -1,20 +1,52 @@
-.flex-container {
+body {
+    background-image: url("wood-background.jpg");
+    font-family: 'Atma';font-size: 22px;
+    font-weight: bold;
+}
+
+.light {
+    font-weight: normal;
+}
+
+  .flex-container {
     display: flex;
-    flex-direction: row; 
-    flex-wrap: wrap;   
+    flex-direction: column;
+    flex-wrap: wrap; 
+    align-items: center;
+    justify-content: center;  
 }
 
 .flex-container > div {
     margin: 10px;
 }
 
-.flex-container2 {
+.flex-container-head {
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap;   
+}
+
+.flex-container-head > div {
+    margin: 10px;
+}
+
+.flex-container-mid {
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap;   
+}
+
+.flex-container-mid > div {
+    margin: 10px;
+}
+
+.flex-container-bottom {
     display: flex;
     flex-direction: column; 
     flex-wrap: wrap;   
 }
 
-.flex-container2 > div {
+.flex-container-bottom > div {
     margin: 10px;
 }
 
@@ -29,11 +61,13 @@ control-panel > * {
 }
 
 .player1 {
-    background-color: deeppink !important;
+    background-color: #028906 !important;
+    background-image: url(square1.jpg);
 }
 
 .player2 {
-    background-color: mediumturquoise !important;
+    background-color: #07660B !important;
+    background-image: url(square2.jpg);
 }
 
 #myScoreBoard {
@@ -48,16 +82,28 @@ control-panel > * {
     padding: 10px;
 }
 
-#playerStats {
+#player1Stats {
     border-collapse: collapse;
     border: 3px solid black;
     margin: 0px;
     padding: 0px;
 }
 
-#playerStars tr {
+#player2Stats {
+    border-collapse: collapse;
+    border: 3px solid black;
+    margin: 0px;
+    padding: 0px;
+}
+
+#player1Stars tr {
     border: 3px solid black;
 }
+
+#player2Stars tr {
+    border: 3px solid black;
+}
+
 
 #myBoard {
     border-collapse: collapse;
@@ -70,37 +116,42 @@ control-panel > * {
 }
 
 .game-off tr:nth-child(even) td:nth-child(even){
-    background-color: mediumturquoise;
+    background-color: #07660B;
+    background-image: url("square1.jpg");
 }
 
 .game-off tr:nth-child(odd) td:nth-child(odd){
-    background-color: mediumturquoise;
+    background-color: #07660B;
+    background-image: url("square1.jpg");
 }
 
 .game-off tr:nth-child(odd) td:nth-child(even){
-    background-color: deeppink;
+    background-color: #028906;
+    background-image: url("square2.jpg");
 }
 
 .game-off tr:nth-child(even) td:nth-child(odd){
-    background-color: deeppink;
+    background-color: #028906;
+    background-image: url("square2.jpg");
 }
 
 .game-on tr:nth-child(even) td:nth-child(even){
-    background-color: mediumturquoise;
+    background-color: #07660B;
 }
 
 .game-on tr:nth-child(odd) td:nth-child(odd){
-    background-color: mediumturquoise;
+    background-color: #07660B;
 }
 
 .game-on tr:nth-child(odd) td:nth-child(even){
-    background-color: deeppink;
+    background-color: #028906;
 }
 
 .game-on tr:nth-child(even) td:nth-child(odd){
-    background-color: deeppink;
+    background-color: #028906;
 }
 
+/*
 .game-on tr:nth-child(even) td:hover:nth-child(odd){
     background-color: rgb(122, 9, 52);
 }
@@ -116,6 +167,8 @@ control-panel > * {
 .game-on tr:nth-child(odd) td:hover:nth-child(odd){
     background-color: rgb(8, 167, 161);
 }
+
+*/
 
 #myBoard td{
     border: 1px solid black;

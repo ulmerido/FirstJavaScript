@@ -24,7 +24,7 @@ const eCellColors =
 */
 
 const k_SquareSize = 45;
-let k_Size = 10;
+let k_Size = 6;
 let g_Board = null;
 let g_PlayerTurnImg = ePawnImageSrc.White;
 let g_PlayerTurnType = ePawnType.White;
@@ -328,7 +328,7 @@ function MouseEnter(i, j)
 function MouseLeave(i, j)
 {
   if (g_gameActive)
-  {
+  { 
     for (let x = 0; x < k_Size; x++)
     {
       for (let y = 0; y < k_Size; y++)
@@ -401,7 +401,7 @@ function erasePrevBoard()
 
 function startGame() 
 {
-  if (k_Size !== 10)
+  if (k_Size !== 6)
   {
     erasePrevBoard();
     initBoard();
