@@ -9,7 +9,7 @@
   <body>
     <div class="flex-container">
       <div class="gameBoard">
-          <table id="myBoard"></table>
+          <table id="myBoard" class="game-off"></table>
       </div>
     
       <div class="flex-container2">
@@ -21,22 +21,22 @@
               </td>
             </tr>
             <tr>
-              <td>turns</td>
+              <td>Rounds: <label id="rounds">0</label></td>
             </tr>
             <tr>
               <td>
                 <table id="playerStats">
                   <tr>
-                    <td class="player1" id="2pawns-player1">player 1: 2 pawns #times</td>
-                    <td class="player2" id="2pawns-player2">player 2: 2 pawns #times</td>
+                    <td class="player1">2 Pawns Player 1: <label id="2pawns-player1">1</label></td>
+                    <td class="player2">2 Pawns Player 2: <label id="2pawns-player2">1</label></td>
                   </tr>
                   <tr>
-                    <td class="player1">player 1: average time</td>
-                    <td class="player2">player 2: average time</td>
+                    <td class="player1">Average Time Player 1: <label id="average-player1">0.00</label></td>
+                    <td class="player2">Average Time Player 2: <label id="average-player2">0.00</label></td>
                   </tr>
                   <tr>
-                    <td class="player1">player 1: score</td>
-                    <td class="player2">player 2: score</td>
+                    <td class="player1">Score Player 1: <label id="score-player1">2</label></td>
+                    <td class="player2">Score Player 2: <label id="score-player2">2</label></td>
                   </tr>
                 </table>
               </td>
@@ -50,7 +50,16 @@
           </div>
           <div id="timer-control">
             <button id="start" onclick="startGame()"> Start </button> 
-            <button id="stop" onclick="endGame()"> Stop </button>
+            <button id="stop" onclick="technicalVictory()" disabled> Stop </button>
+          </div>
+          <div>
+            <select onchange="modifyBoardSize(this.value)">
+              <option value=6>6X6</option>
+              <option value=8>8X8</option>
+              <option value=10 selected>10X10</option>
+              <option value=12>12X12</option>
+              <option value=14>14X14</option>
+            </select>
           </div>
         </div>
       </div>

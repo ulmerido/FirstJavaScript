@@ -9,8 +9,9 @@ const ePawnImageSrc =
 
 const ePawnType =
 {
-  Black: 'B',
-  White: 'W',
+  Black: "Black",
+  White: "White",
+  Tie: "Tie",
   Empty: null,
 };
 
@@ -23,7 +24,7 @@ const eCellColors =
 */
 
 const k_SquareSize = 45;
-const k_Size = 10
+let k_Size = 10;
 let g_Board = null;
 let g_PlayerTurnImg = ePawnImageSrc.White;
 let g_PlayerTurnType = ePawnType.White;
@@ -31,6 +32,7 @@ let g_TrainerMode = false;
 let g_Timer;
 let g_Player1;
 let g_Player2;
+let g_gameActive = false;
 
 let stats = {
   scorePlayer1: 2,
@@ -38,11 +40,85 @@ let stats = {
   twoPawnsPlayer1: 1,
   twoPawnsPlayer2: 1,
   roundTimePlayer1: [],
+  averagePlayer1: 0,
   roundTimePlayer2: [],
-  turnsNum: 0
+  averagePlayer2: 0,
+  roundsNum: 0,
 };
 
 function changeTurn()
+{
+  let full;
+  let winner;
+
+  calcNextMove();
+  updateAverageTime();
+  updateRounds();
+  full = updateScore();
+  update2Pawns();
+  updateGame();
+  updateMove();
+  winner = checkWinner(full);
+  if (winner)
+  {
+    endGameAsWinner(winner);
+  }
+}
+
+function checkWinner(full)
+{
+  let winner = null;
+
+  if (full)
+  {
+    if (stats.scorePlayer1 > stats.scorePlayer2)
+    {
+      winner = ePawnType.White;
+    }
+    else if (stats.scorePlayer1 < stats.scorePlayer2)
+    {
+      winner = ePawnType.Black
+    }
+    else
+    {
+      winner = ePawnType.Tie;
+    }
+  }
+  else
+  {
+    if (stats.scorePlayer1 === 0)
+    {
+      winner = ePawnType.Black;
+    }
+    else if (stats.scorePlayer2 === 0)
+    {
+      winner = ePawnType.White;
+    }
+  }
+
+  return winner;
+}
+
+function calcNextMove()
+{
+  let time = new Date();
+
+  if (g_PlayerTurnType == ePawnType.White)
+  {
+    let temp = time.getTime() - stats.roundTimePlayer1.pop();
+    stats.roundTimePlayer1.push(temp / 1000);
+    stats.roundTimePlayer2.push(time.getTime());
+  }
+
+  if (g_PlayerTurnType == ePawnType.Black)
+  {
+    let temp = time.getTime() - stats.roundTimePlayer2.pop();
+    stats.roundTimePlayer2.push(temp / 1000);
+    stats.roundTimePlayer1.push(time.getTime());
+  }
+}
+
+function updateMove()
 {
   if (g_PlayerTurnType === ePawnType.White)
   {
@@ -54,34 +130,62 @@ function changeTurn()
     g_PlayerTurnType = ePawnType.White;
     g_PlayerTurnImg = ePawnImageSrc.White;
   }
+}
 
-  updateScore();
-  update2Pawns();
-  updateAverageTime();
+function updateRounds()
+{
+  stats.roundsNum++;
+}
+
+function updateGame()
+{
+  if (g_PlayerTurnType == ePawnType.White)
+  {
+    document.getElementById("average-player1").innerHTML = `${ stats.averagePlayer1.toFixed(2) }`;
+  }
+
+  if (g_PlayerTurnType == ePawnType.Black)
+  {
+    document.getElementById("average-player2").innerHTML = `${ stats.averagePlayer2.toFixed(2) }`;
+  }
+
+  document.getElementById("2pawns-player1").innerHTML = `${ stats.twoPawnsPlayer1 }`;
+  document.getElementById("2pawns-player2").innerHTML = `${ stats.twoPawnsPlayer2 }`;
+  document.getElementById("score-player1").innerHTML = `${ stats.scorePlayer1 }`;
+  document.getElementById("score-player2").innerHTML = `${ stats.scorePlayer2 }`;
+  document.getElementById("rounds").innerHTML = `${ stats.roundsNum }`;
+
 }
 
 function updateScore()
 {
   let counter1 = 0;
   let counter2 = 0;
+  let full = true;
 
   for (let i = 0; i < k_Size; i++)
   {
-    for (let j = 0; i < k_Size; j++)
+    for (let j = 0; j < k_Size; j++)
     {
       if (g_Board[i][j].Pawn === ePawnType.Black)
       {
-        counter1++;
+        counter2++;
       }
       if (g_Board[i][j].Pawn === ePawnType.White)
       {
-        counter2++;
+        counter1++;
+      }
+      if (g_Board[i][j].Pawn === ePawnType.Empty)
+      {
+        full = false;
       }
     }
-
-    stats.scorePlayer1 = counter1;
-    stats.scorePlayer2 = counter2;
   }
+
+  stats.scorePlayer1 = counter1;
+  stats.scorePlayer2 = counter2;
+
+  return full;
 }
 
 function update2Pawns()
@@ -92,16 +196,24 @@ function update2Pawns()
   }
   if (stats.scorePlayer2 === 2)
   {
-    stats.scorePlayer2++;
+    stats.twoPawnsPlayer2++;
   }
 }
 
 function updateAverageTime()
 {
-  
-  stats.roundTimePlayer1.forEach((timeSlot)=>{
-      
-  });
+  let sum = 0;
+
+  if (g_PlayerTurnType === ePawnType.White)
+  {
+    stats.roundTimePlayer1.forEach((timeSlot) => { sum += timeSlot; });
+    stats.averagePlayer1 = sum / stats.roundTimePlayer1.length;
+  }
+  if (g_PlayerTurnType === ePawnType.Black)
+  {
+    stats.roundTimePlayer2.forEach((timeSlot) => { sum += timeSlot; });
+    stats.averagePlayer2 = sum / stats.roundTimePlayer2.length;
+  }
 }
 
 
@@ -182,9 +294,15 @@ function SetCellWithNewPawn(i_Cell, i_PawnType)
 
 function initBoard()
 {
-  var mid = k_Size / 2;
   createGameTable();
   linkBoardToHTML();
+  setBoard();
+}
+
+function setBoard()
+{
+  let mid = k_Size / 2;
+
   SetCellWithNewPawn(g_Board[mid - 1][mid - 1], ePawnType.Black);
   SetCellWithNewPawn(g_Board[mid][mid], ePawnType.Black);
   SetCellWithNewPawn(g_Board[mid - 1][mid], ePawnType.White);
@@ -193,36 +311,40 @@ function initBoard()
 
 function MouseEnter(i, j)
 {
-  let isValid = isValidMove(i, j);
-  if (isValid && g_Board[i][j].Pawn === null)
+  if (g_gameActive)
   {
-    g_Board[i][j].Img.src = g_PlayerTurnImg;
+    let isValid = isValidMove(i, j);
+    if (isValid && g_Board[i][j].Pawn === null)
+    {
+      g_Board[i][j].Img.src = g_PlayerTurnImg;
+    }
+    if (g_TrainerMode)
+    {
+      findCellsHover(i, j);
+    }
   }
-  if (g_TrainerMode)
-  {
-    findCellsHover(i, j);
-  }
-
 }
 
 function MouseLeave(i, j)
 {
-  for (let x = 0; x < k_Size; x++)
+  if (g_gameActive)
   {
-    for (let y = 0; y < k_Size; y++)
+    for (let x = 0; x < k_Size; x++)
     {
-      if (g_Board[x][y].Pawn === ePawnType.White)
+      for (let y = 0; y < k_Size; y++)
       {
-        g_Board[x][y].Img.src = ePawnImageSrc.White;
-      }
-      else if (g_Board[x][y].Pawn === ePawnType.Black)
-      {
-        g_Board[x][y].Img.src = ePawnImageSrc.Black;
-      }
-      else if (g_Board[x][y].Pawn === ePawnType.Empty)
-      {
-        g_Board[x][y].Img.src = ePawnImageSrc.Empty;
-      }/*
+        if (g_Board[x][y].Pawn === ePawnType.White)
+        {
+          g_Board[x][y].Img.src = ePawnImageSrc.White;
+        }
+        else if (g_Board[x][y].Pawn === ePawnType.Black)
+        {
+          g_Board[x][y].Img.src = ePawnImageSrc.Black;
+        }
+        else if (g_Board[x][y].Pawn === ePawnType.Empty)
+        {
+          g_Board[x][y].Img.src = ePawnImageSrc.Empty;
+        }/*
       else if(g_Board[x][y].CellColor === eCellColors.Type1)
       {
         g_Board[x][y].Cell.style.backgroundcolor = eCellColors.Type1;
@@ -231,14 +353,15 @@ function MouseLeave(i, j)
       {
         g_Board[x][y].Cell.style.backgroundcolor = eCellColors.Type2;
       }*/
+      }
     }
+    /*
+    if (isValidMove(i, j) && g_Board[i][j].Pawn === null)
+    {
+      g_Board[i][j].Img.src = ePawnImageSrc.Empty;
+    }
+    */
   }
-  /*
-  if (isValidMove(i, j) && g_Board[i][j].Pawn === null)
-  {
-    g_Board[i][j].Img.src = ePawnImageSrc.Empty;
-  }
-  */
 }
 
 function isValidMove(i, j)
@@ -263,10 +386,52 @@ function isValidMove(i, j)
   return valid;
 }
 
-let Ctr = (function () 
+(function ()
 {
   initBoard();
+  updateGame();
 })();
+
+
+function erasePrevBoard()
+{
+  let table = document.getElementById("myBoard");
+  table.removeChild(table.childNodes[0]);
+}
+
+function startGame() 
+{
+  if (k_Size !== 10)
+  {
+    erasePrevBoard();
+    initBoard();
+  }
+
+  let table = document.getElementById("myBoard");
+  table.className = "game-on";
+  g_gameActive = true;
+  startTimer();
+  setBoardForANewGame();
+  initStats();
+  updateGame();
+  document.getElementById("average-player1").innerHTML = `${ stats.averagePlayer1.toFixed(2) }`;
+  document.getElementById("average-player2").innerHTML = `${ stats.averagePlayer2.toFixed(2) }`;
+  // @ts-ignore
+  document.getElementById("stop").disabled = false;
+
+
+  let temp = new Date();
+  if (g_PlayerTurnType === ePawnType.White)
+  {
+    stats.roundTimePlayer1.push(temp.getTime());
+  }
+  else
+  {
+    stats.roundTimePlayer2.push(temp.getTime());
+  }
+
+};
+
 
 /*
 function getExpectedNewPawns(i, j)
@@ -538,33 +703,33 @@ function findCells(i, j)
 
 function MouseClick(i, j)
 {
-
-  if (isValidMove(i, j))
+  if (g_gameActive)
   {
-    findCells(i, j);
-    SetCellWithNewPawn(g_Board[i][j], g_PlayerTurnType);
-    changeTurn();
-    /*
-    let x, y;
-    let possMatrix = getExpectedNewPawns(i, j);
-    for (x = 0; x < k_Size; x++)
+    if (isValidMove(i, j))
     {
-      for (y = 0; y < k_Size; y++)
+      findCells(i, j);
+      SetCellWithNewPawn(g_Board[i][j], g_PlayerTurnType);
+      changeTurn();
+      /*
+      let x, y;
+      let possMatrix = getExpectedNewPawns(i, j);
+      for (x = 0; x < k_Size; x++)
       {
-        if (possMatrix[x][y] !== null)
+        for (y = 0; y < k_Size; y++)
         {
-          SetCellWithNewPawn(g_Board[x][y], g_PlayerTurnType);
+          if (possMatrix[x][y] !== null)
+          {
+            SetCellWithNewPawn(g_Board[x][y], g_PlayerTurnType);
+          }
         }
       }
+      */
+
+
+      //g_PlayerTurnImg = ePawnImageSrc.Black;
+      //g_PlayerTurnType = ePawnType.Black;
     }
-    */
-
-
-    //g_PlayerTurnImg = ePawnImageSrc.Black;
-    //g_PlayerTurnType = ePawnType.Black;
   }
-
-
 }
 
 function findCellsHover(i, j)
@@ -774,10 +939,6 @@ function findCellsHover(i, j)
   }
 }
 
-function startGame()
-{
-  startTimer();
-}
 
 function startTimer()
 {
@@ -810,13 +971,89 @@ function pad(val)
   }
 }
 
+function endGameAsWinner(winner)
+{
+  if (winner === ePawnType.Tie)
+  {
+    alert("There is a Tie");
+  }
+  else
+  {
+    alert(`The Winner is: The ${ winner } Player`);
+  }
+
+  if (winner === ePawnType.Black)
+  {
+    g_PlayerTurnType = ePawnType.Black;
+    g_PlayerTurnImg = ePawnImageSrc.Black;
+  }
+  else
+  {
+    g_PlayerTurnType = ePawnType.White;
+    g_PlayerTurnImg = ePawnImageSrc.White;
+  }
+
+  endGame();
+  // @ts-ignore
+  document.getElementById("stop").disabled = true;
+  let table = document.getElementById("myBoard");
+  table.className = "game-off";
+  g_gameActive = false;
+
+}
+
+function initStats()
+{
+  stats.averagePlayer1 = 0;
+  stats.averagePlayer2 = 0;
+  stats.roundsNum = 0;
+  stats.scorePlayer1 = 2;
+  stats.scorePlayer2 = 2;
+  stats.twoPawnsPlayer1 = 1;
+  stats.twoPawnsPlayer2 = 1;
+  stats.roundTimePlayer1 = [];
+  stats.roundTimePlayer2 = [];
+  document.getElementById("minutes").innerHTML = "00";
+  document.getElementById("seconds").innerHTML = "00";
+}
+
+function setBoardForANewGame()
+{
+  for (let i = 0; i < k_Size; i++)
+  {
+    for (let j = 0; j < k_Size; j++)
+    {
+      g_Board[i][j].Pawn = ePawnType.Empty;
+      g_Board[i][j].Img.src = ePawnImageSrc.Empty;
+    }
+  }
+
+  setBoard();
+}
+
 function endGame()
 {
   // @ts-ignore
   document.getElementById("start").disabled = false;
   clearInterval(g_Timer);
-  document.getElementById("minutes").innerHTML = "00";
-  document.getElementById("seconds").innerHTML = "00";
+
+}
+
+function modifyBoardSize(size)
+{
+  k_Size = size;
+}
+
+function technicalVictory()
+{
+  if (g_PlayerTurnType === ePawnType.White)
+  {
+    endGameAsWinner(ePawnType.Black);
+  }
+  else if (g_PlayerTurnType === ePawnType.Black)
+  {
+    endGameAsWinner(ePawnType.White);
+  }
 }
 
 
