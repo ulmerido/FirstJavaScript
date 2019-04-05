@@ -1,11 +1,23 @@
 //  @ts-check
 
+
 const ePawnImageSrc =
 {
   Black: "piece-1.gif",
   White: "piece-2.gif",
   Empty: "piece-0.gif",
 };
+
+/*
+const ePawnImageSrc = 
+{
+  BlackLight: "piece-1-light.gif",
+  BlackDark: "piece-1-dark.gif",
+  WhiteLight: "piece-2-light.gif",
+  WhiteDark: "piece-2-dark.gif",
+  Empty: "piece-0.gif"
+}
+*/
 
 const ePawnType =
 {
@@ -120,22 +132,22 @@ function calcNextMove()
 
 function updateMove()
 {
-  let player1 = document.getElementById("player1-name");
-  let player2 = document.getElementById("player2-name");
+  let player1 = document.getElementById("stats1-container");
+  let player2 = document.getElementById("stats2-container");
 
   if (g_PlayerTurnType === ePawnType.White)
   {
     g_PlayerTurnType = ePawnType.Black;
     g_PlayerTurnImg = ePawnImageSrc.Black;
     player2.className = "current-player";
-    player1.className = null;
+    player1.className = "notcurrent-player";
   }
   else
   {
     g_PlayerTurnType = ePawnType.White;
     g_PlayerTurnImg = ePawnImageSrc.White;
     player1.className = "current-player";
-    player2.className = null;
+    player2.className = "notcurrent-player";
   }
 }
 
@@ -246,7 +258,15 @@ function createGameTable()
     html += "<tr>";
     for (let j = 0; j < k_Size; j++)
     {
-      html += `<td id=cell[${ j }][${ i }]><img id=img[${ j }][${ i }] src="piece-0.gif" border=0 width=${ k_SquareSize } height=${ k_SquareSize }></img></td>`;
+      if((i%2 === 0 && j%2 === 0)||(i%2=== 1 && j%2 ===1))
+      {
+        html += `<td id=cell[${ j }][${ i }]><img id=img[${ j }][${ i }] class="dark" src="piece-0.gif" border=0 width=${ k_SquareSize } height=${ k_SquareSize }></img></td>`;
+      }
+
+      else
+      {
+        html += `<td id=cell[${ j }][${ i }]><img id=img[${ j }][${ i }] class="light" src="piece-0.gif" border=0 width=${ k_SquareSize } height=${ k_SquareSize }></img></td>`;
+      }
     }
 
     html += "</tr>";
@@ -288,13 +308,27 @@ function SetCellWithNewPawn(i_Cell, i_PawnType)
   switch (i_PawnType)
   {
     case (ePawnType.Black):
-      i_Cell.Img.src = ePawnImageSrc.Black;
       i_Cell.Pawn = ePawnType.Black;
+      if(i_Cell.Img.className === "dark")
+      {
+        i_Cell.Img.src = ePawnImageSrc.Black;
+      }
+      else
+      {
+        i_Cell.Img.src = ePawnImageSrc.Black;
+      }
       break;
 
     case (ePawnType.White):
-      i_Cell.Img.src = ePawnImageSrc.White;
-      i_Cell.Pawn = ePawnType.White;
+    i_Cell.Pawn = ePawnType.White;
+    if(i_Cell.Img.className === "dark")
+      {
+        i_Cell.Img.src = ePawnImageSrc.White;
+      }
+      else
+      {
+        i_Cell.Img.src = ePawnImageSrc.White;
+      }
       break;
   }
 }
@@ -416,18 +450,18 @@ function startGame()
 
   let table = document.getElementById("myBoard");
   table.className = "game-on";
-  let player1 = document.getElementById("player1-name");
-  let player2 = document.getElementById("player2-name");
+  let player1 = document.getElementById("stats1-container");
+  let player2 = document.getElementById("stats2-container");
 
   if(g_PlayerTurnType === ePawnType.White)
   {
     player1.className = "current-player";
-    player2.className = null;
+    player2.className = "notcurrent-player";
   }
   else if(g_PlayerTurnType === ePawnType.Black)
   {
     player2.className = "current-player";
-    player1.className = null;
+    player1.className = "notcurrent-player";
   }
 
   g_gameActive = true;

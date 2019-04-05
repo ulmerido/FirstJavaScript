@@ -89,24 +89,44 @@ body {
 
 /*************STATS***************/
 
-#stats1-container, #stats-container {
+#stats1-container, #stats2-container {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap; 
     align-items: center;
-    justify-content: center;  
+    justify-content: center; 
+    
+}
+
+#player1-name, #player2-name {
+    margin: 0;
+}
+
+.notcurrent-player {
+    border-radius: 25px;
+    border: 5px solid transparent;
+    padding: 0 10px;
 }
 
 .current-player {
     border-radius: 25px;
     background-color: rgb(247, 63, 63);
     border: 5px solid black;
+    padding: 0 10px;
 }
 
 #player1Stats, #player2Stats {
     border-radius: 25px;
     border-collapse: separate;
     border: 3px solid black;
+}
+
+#player1-name-div, #player2-name-div {
+    margin: 10px 0;
+}
+
+#player1Stats {
+    background-color: black;
 }
 
 #player1Stats {
