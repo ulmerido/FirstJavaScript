@@ -120,15 +120,22 @@ function calcNextMove()
 
 function updateMove()
 {
+  let player1 = document.getElementById("player1-name");
+  let player2 = document.getElementById("player2-name");
+
   if (g_PlayerTurnType === ePawnType.White)
   {
     g_PlayerTurnType = ePawnType.Black;
     g_PlayerTurnImg = ePawnImageSrc.Black;
+    player2.className = "current-player";
+    player1.className = null;
   }
   else
   {
     g_PlayerTurnType = ePawnType.White;
     g_PlayerTurnImg = ePawnImageSrc.White;
+    player1.className = "current-player";
+    player2.className = null;
   }
 }
 
@@ -409,6 +416,20 @@ function startGame()
 
   let table = document.getElementById("myBoard");
   table.className = "game-on";
+  let player1 = document.getElementById("player1-name");
+  let player2 = document.getElementById("player2-name");
+
+  if(g_PlayerTurnType === ePawnType.White)
+  {
+    player1.className = "current-player";
+    player2.className = null;
+  }
+  else if(g_PlayerTurnType === ePawnType.Black)
+  {
+    player2.className = "current-player";
+    player1.className = null;
+  }
+
   g_gameActive = true;
   startTimer();
   setBoardForANewGame();

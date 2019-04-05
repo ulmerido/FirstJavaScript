@@ -1,3 +1,7 @@
+/*******************************/
+/**********GENERAL**************/
+/********************************/
+
 body {
     background-image: url("wood-background.jpg");
     font-family: 'Atma';font-size: 22px;
@@ -8,7 +12,7 @@ body {
     font-weight: normal;
 }
 
-  .flex-container {
+.flex-container {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap; 
@@ -16,9 +20,15 @@ body {
     justify-content: center;  
 }
 
+/*
 .flex-container > div {
     margin: 10px;
 }
+*/
+
+/*****************************/
+/*************TOP*************/
+/*****************************/
 
 .flex-container-head {
     display: flex;
@@ -30,90 +40,154 @@ body {
     margin: 10px;
 }
 
-.flex-container-mid {
-    display: flex;
-    flex-direction: row; 
-    flex-wrap: wrap;   
-}
-
-.flex-container-mid > div {
-    margin: 10px;
-}
-
-.flex-container-bottom {
-    display: flex;
-    flex-direction: column; 
-    flex-wrap: wrap;   
-}
-
-.flex-container-bottom > div {
-    margin: 10px;
-}
-
-.control-panel {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-control-panel > * {
-    margin: 10px;
-}
-
-.player1 {
-    background-color: #028906 !important;
-    background-image: url(square1.jpg);
-}
-
-.player2 {
-    background-color: #07660B !important;
-    background-image: url(square2.jpg);
-}
+/***********SCOREBOARD***********/
 
 #myScoreBoard {
-    border-collapse: collapse;
+    border-radius: 25px;
+    border-collapse: separate;
     border: 3px solid black;
     text-align: center;
 }
 
 #myScoreBoard td {
     background-color: wheat;
+    border-radius: 25px;
     border: 3px solid black;
     padding: 10px;
 }
 
-#player1Stats {
-    border-collapse: collapse;
-    border: 3px solid black;
-    margin: 0px;
-    padding: 0px;
+
+/*********************************/
+/****************MID**************/
+/********************************/
+
+.flex-container-mid {
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap;   
+    text-align: center;
 }
 
-#player2Stats {
-    border-collapse: collapse;
-    border: 3px solid black;
-    margin: 0px;
-    padding: 0px;
+.flex-container-mid > div {
+    margin: 10px;
 }
 
-#player1Stars tr {
-    border: 3px solid black;
-}
-
-#player2Stars tr {
-    border: 3px solid black;
-}
-
+/************BOARD*****************/
 
 #myBoard {
     border-collapse: collapse;
     border: 3px solid black;
+    margin: 0px 40px;
 }
 
 #myBoard td {
+    border: 1px solid black;
+    padding: 8px;
     width: 30px;
     height: 30px;
 }
+
+/*************STATS***************/
+
+#stats1-container, #stats-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap; 
+    align-items: center;
+    justify-content: center;  
+}
+
+.current-player {
+    border-radius: 25px;
+    background-color: rgb(247, 63, 63);
+    border: 5px solid black;
+}
+
+#player1Stats, #player2Stats {
+    border-radius: 25px;
+    border-collapse: separate;
+    border: 3px solid black;
+}
+
+#player1Stats {
+    background-color: black;
+}
+
+#player2Stats {
+    background-color: white;
+}
+
+#player1Stats tr, #player2Stats tr {
+    border-radius: 25px;
+    border: 3px solid black;
+    margin: 0px;
+}
+
+#player1Stats td, #player2Stats td {
+    border-radius: 25px;
+    padding: 10px;
+}
+
+#player1Stats td {
+    background-color: #ffffff;
+    border: 3px solid black;
+}
+
+#player2Stats td {
+    background-color: black;
+    color: white;
+    border: 3px solid white;
+}
+
+
+
+/******************************/
+/*************BOTTOM***********/
+/*******************************/
+
+.flex-container-bottom {
+    display: flex;
+    flex-direction: column; 
+    flex-wrap: wrap;  
+    align-items: center;
+    justify-content: center;   
+}
+
+.flex-container-bottom > div {
+    margin: 10px;
+}
+
+.start-panel {
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    align-items: center;
+    justify-content: center;  
+}
+
+.start-panel > div {
+    margin: 10px;
+}
+
+.control-panel {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center; 
+    border: 3px solid black;
+    border-radius: 25px;
+    background-color: wheat; 
+}
+
+/*
+.control-panel > * {
+    margin: 10px;
+}*/
+
+
+
+/**************OTHER****************/
 
 .game-off tr:nth-child(even) td:nth-child(even){
     background-color: #07660B;
@@ -151,29 +225,7 @@ control-panel > * {
     background-color: #028906;
 }
 
-/*
-.game-on tr:nth-child(even) td:hover:nth-child(odd){
-    background-color: rgb(122, 9, 52);
-}
-    
-.game-on tr:nth-child(odd) td:hover:nth-child(even){
-    background-color: rgb(122, 9, 52);
-}
 
-.game-on tr:nth-child(even) td:hover:nth-child(even){
-    background-color: rgb(8, 167, 161);
-}
-
-.game-on tr:nth-child(odd) td:hover:nth-child(odd){
-    background-color: rgb(8, 167, 161);
-}
-
-*/
-
-#myBoard td{
-    border: 1px solid black;
-    padding: 8px;
-}
 
 /* The Modal (background) */
 .modal {
@@ -187,28 +239,71 @@ control-panel > * {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-  
-  /* Modal Content/Box */
-  .modal-content {
+}
+
+/* Modal Content/Box */
+.modal-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
-  }
-  
-  /* The Close Button */
-  .close {
+}
+
+/* The Close Button */
+.close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
+}
+
+.close:hover,
+.close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
-  }
+}
+
+/*
+#player1Stats tr:nth-child(odd){
+    background-color: #028906 !important;
+    background-image: url(square1.jpg);
+}
+
+#player1Stats tr:nth-child(even){
+    background-color: #028906 !important;
+    background-image: url(square2.jpg);
+}
+
+#player2Stats tr:nth-child(odd){
+    background-color: #07660B !important;
+    background-image: url(square2.jpg);
+}
+
+#player2Stats tr:nth-child(even){
+    background-color: #07660B !important;
+    background-image: url(square1.jpg);
+}
+*/
+
+/******************/
+
+/*
+.game-on tr:nth-child(even) td:hover:nth-child(odd){
+    background-color: rgb(122, 9, 52);
+}
+
+.game-on tr:nth-child(odd) td:hover:nth-child(even){
+    background-color: rgb(122, 9, 52);
+}
+
+.game-on tr:nth-child(even) td:hover:nth-child(even){
+    background-color: rgb(8, 167, 161);
+}
+
+.game-on tr:nth-child(odd) td:hover:nth-child(odd){
+    background-color: rgb(8, 167, 161);
+}
+
+*/

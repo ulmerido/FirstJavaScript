@@ -11,9 +11,6 @@
     <div class="flex-container">
 
       <div class="flex-container-head">
-        <div id="player1-div">
-          <p id="player1-header">Player 1</p>
-        </div>
         <div class="scoreBoard">
           <table id="myScoreBoard">
             <tr>
@@ -27,39 +24,46 @@
             <tr>
           </table>
         </div>
-        <div id="player2-div">
-          <p id="player2-header">Player 2</p>
-        </div>
       </div>
 
       <div class="flex-container-mid">
-        <table id="player1Stats">
-          <tr>
-            <td class="player1 flex-container">2 Pawns Player 1: <label id="2pawns-player1" class="light">1</label></td>
-          </tr>
-          <tr>
-            <td class="player1 flex-container">Average Time Player 1: <label id="average-player1" class="light">0.00</label></td>
-          </tr>
-          <tr>
-            <td class="player1 flex-container">Score Player 1: <label id="score-player1" class="light">2</label></td>
-          </tr>
-        </table>
+        <div class="stats1-container">
+          <div id="player1-name-div">
+            <h2 id="player1-name">Player 1</h2>
+          </div>
+          <table id="player1Stats">
+            <tr>
+              <td class="player1 flex-container">2 Pawns: <label id="2pawns-player1" class="light">1</label></td>
+            </tr>
+            <tr>
+              <td class="player1 flex-container">Average Time: <label id="average-player1" class="light">0.00</label></td>
+            </tr>
+            <tr>
+              <td class="player1 flex-container">Score: <label id="score-player1" class="light">2</label></td>
+            </tr>
+          </table>
+        </div>
 
         <div class="gameBoard">
             <table id="myBoard" class="game-off"></table>
         </div>
 
-        <table id="player2Stats">
-          <tr>
-            <td class="player2 flex-container">2 Pawns Player 2: <label id="2pawns-player2" class="light">1</label></td>
-          </tr>
-          <tr>
-            <td class="player2 flex-container">Average Time Player 2: <label id="average-player2" class="light">0.00</label></td>
-          </tr>
-          <tr>
-            <td class="player2 flex-container">Score Player 2: <label id="score-player2"> class="light"2</label></td>
-          </tr>
-        </table>
+        <div class="stats2-container">
+          <div id="player2-name-div">
+            <h2 id="player2-name">Player 2</h2>
+          </div>
+          <table id="player2Stats">
+            <tr>
+              <td class="player2 flex-container">2 Pawns: <label id="2pawns-player2" class="light">1</label></td>
+            </tr>
+            <tr>
+              <td class="player2 flex-container">Average Time: <label id="average-player2" class="light">0.00</label></td>
+            </tr>
+            <tr>
+              <td class="player2 flex-container">Score: <label id="score-player2"> class="light"2</label></td>
+            </tr>
+          </table>
+        </div>
       </div>
 
       <div class="flex-container-bottom">
@@ -67,18 +71,20 @@
           <div>
             <input type="checkbox" name="Trainer Mode" onchange="executeTrainerMode()">Trainer Mode
           </div>
-          <div id="timer-control">
-            <button id="start" onclick="startGame()"> Start </button> 
-            <button id="stop" onclick="technicalVictory()" disabled> Stop </button>
-          </div>
-          <div>
-            <select onchange="modifyBoardSize(this.value)">
-              <option value=6 selected>6X6</option>
-              <option value=8>8X8</option>
-              <option value=10>10X10</option>
-              <option value=12>12X12</option>
-              <option value=14>14X14</option>
-            </select>
+          <div class="start-panel">
+            <div id="timer-control">
+              <button id="start" onclick="startGame()"> Start </button> 
+              <button id="stop" onclick="technicalVictory()" disabled> Stop </button>
+            </div>
+            <div>
+              <select onchange="modifyBoardSize(this.value)">
+                <option value=6 selected>6X6</option>
+                <option value=8>8X8</option>
+                <option value=10>10X10</option>
+                <option value=12>12X12</option>
+                <option value=14>14X14</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
