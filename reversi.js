@@ -1,6 +1,22 @@
 //  @ts-check
 
 
+let reversiLogic = (function() {
+
+})();
+
+let reversiUI = (function() {
+
+})();
+
+let reversiController = (function() {
+
+})();
+
+
+
+
+
 const ePawnImageSrc =
 {
   Black: "piece-1.gif",
@@ -359,7 +375,7 @@ function MouseEnter(i, j)
     {
       g_Board[i][j].Img.src = g_PlayerTurnImg;
     }
-    if (g_TrainerMode)
+    if (g_TrainerMode && g_Board[i][j].Pawn === null)
     {
       findCellsHover(i, j);
     }
