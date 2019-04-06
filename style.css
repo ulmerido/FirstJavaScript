@@ -4,9 +4,20 @@
 
 body {
     background-image: url("wood-background.jpg");
-    font-family: 'Atma';font-size: 22px;
+    font-family: 'Atma';
+    font-size: 22px;
     font-weight: bold;
+    text-align: center;
 }
+
+/*
+body{
+    font-size: 16px;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    text-align: center;
+    background-color: #f8faff;
+  }
+*/
 
 .light {
     font-weight: normal;
@@ -20,11 +31,11 @@ body {
     justify-content: center;  
 }
 
-/*
+
 .flex-container > div {
     margin: 10px;
 }
-*/
+
 
 /*****************************/
 /*************TOP*************/
@@ -46,14 +57,20 @@ body {
     border-radius: 25px;
     border-collapse: separate;
     border: 3px solid black;
+    background-color: rgba(255, 255, 255, 0.2);
     text-align: center;
+    padding: 0 180px;
+}
+
+#myScoreBoard p {
+    margin: 0;
 }
 
 #myScoreBoard td {
     background-color: wheat;
     border-radius: 25px;
     border: 3px solid black;
-    padding: 10px;
+    padding: 10px 150px;
 }
 
 
@@ -61,11 +78,14 @@ body {
 /****************MID**************/
 /********************************/
 
-.flex-container-mid {
+.flex-container-mid, .flex-container-bottom{
     display: flex;
     flex-direction: row; 
-    flex-wrap: wrap;   
+    flex-wrap: wrap;  
     text-align: center;
+    border-radius: 25px;
+    border: 5px solid black;
+    background-color: rgba(255, 255, 255, 0.2)
 }
 
 .flex-container-mid > div {
@@ -78,6 +98,7 @@ body {
     border-collapse: collapse;
     border: 3px solid black;
     margin: 0px 40px;
+    
 }
 
 #myBoard td {
@@ -88,6 +109,12 @@ body {
 }
 
 /*************STATS***************/
+
+/*
+#player1Stats-div, #player2Stats-div {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+*/
 
 #stats1-container, #stats2-container {
     display: flex;
@@ -110,7 +137,8 @@ body {
 
 .current-player {
     border-radius: 25px;
-    background-color: rgb(247, 63, 63);
+    background-color: rgba(255, 0, 0, 0.5);
+    /*background-color: rgba(247, 47, 47, 0.5);*/
     border: 5px solid black;
     padding: 0 10px;
 }
@@ -118,6 +146,13 @@ body {
 #player1Stats, #player2Stats {
     border-radius: 25px;
     border-collapse: separate;
+}
+
+#player1Stats {
+    border: 3px solid white;
+}
+
+#player2Stats {
     border: 3px solid black;
 }
 
@@ -125,17 +160,15 @@ body {
     margin: 10px 0;
 }
 
+/*
 #player1Stats {
-    background-color: black;
-}
-
-#player1Stats {
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.3);;
 }
 
 #player2Stats {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.3);
 }
+*/
 
 #player1Stats tr, #player2Stats tr {
     border-radius: 25px;
@@ -149,14 +182,14 @@ body {
 }
 
 #player1Stats td {
-    background-color: #ffffff;
-    border: 3px solid black;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 3px solid white;
 }
 
 #player2Stats td {
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.3);
     color: white;
-    border: 3px solid white;
+    border: 3px solid black;
 }
 
 
@@ -165,12 +198,17 @@ body {
 /*************BOTTOM***********/
 /*******************************/
 
-.flex-container-bottom {
+.container {
     display: flex;
-    flex-direction: column; 
+    flex-direction: row; 
     flex-wrap: wrap;  
     align-items: center;
-    justify-content: center;   
+    justify-content: space-between;   
+    padding: 0px;
+}
+
+.container > div {
+   margin: 0 30px; 
 }
 
 .flex-container-bottom > div {
@@ -181,7 +219,7 @@ body {
     display: flex;
     flex-direction: row; 
     flex-wrap: wrap; 
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;  
 }
 
@@ -195,9 +233,19 @@ body {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center; 
-    border: 3px solid black;
+    /*border: 3px solid black;*/
     border-radius: 25px;
-    background-color: wheat; 
+    /*background-color: wheat;*/ 
+}
+
+#timer-control {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+#timer-control > button {
+    margin: 10px;
 }
 
 /*
@@ -264,10 +312,13 @@ body {
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
+    border-radius: 25px;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
+    text-align: center;
+    font-size: 150%;
 }
 
 /* The Close Button */
@@ -327,3 +378,213 @@ body {
 }
 
 */
+
+/***************************************/
+/************ Start Stop Buttons*******/
+/*************************************/
+/*
+$fuschia: #ff0081;
+#ff0081: $fuschia;
+$button-text-color: #fff;
+$baby-blue: #f8faff;
+*/
+
+.bubbly-button{
+  font-family: "Atma";
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 15px 35px;
+  margin-top: 100px;
+  margin-bottom: 60px;
+  -webkit-appearance: none;
+  appearance: none;
+  color: #fff;
+  border-radius: 4px;
+  background-color: #dd3636;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
+  box-shadow: 0 2px 25px rgba(255, 255, 255, 0.5);
+  
+}
+
+.bubbly-button:disabled {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bubbly-button:focus {
+    outline: 0;
+}
+  
+.bubbly-button:before, .bubbly-button:after {
+    position: absolute;
+    content: '';
+    display: block;
+    width: 140%;
+    height: 100%;
+    left: -20%;
+    z-index: -1000;
+    transition: all ease-in-out 0.5s;
+    background-repeat: no-repeat;
+}
+  
+.bubbly-button:before {
+    display: none;
+    top: -75%;
+    background-image:  
+      radial-gradient(circle, #ff0808 20%, transparent 20%),
+    radial-gradient(circle,  transparent 20%, #ff0081 20%, transparent 30%),
+    radial-gradient(circle, #ffffff 20%, transparent 20%), 
+    radial-gradient(circle, #ffee00 20%, transparent 20%),
+    radial-gradient(circle,  transparent 10%, #ff0081 15%, transparent 20%),
+    radial-gradient(circle, #ffee00 20%, transparent 20%),
+    radial-gradient(circle, #ff0808 20%, transparent 20%),
+    radial-gradient(circle, #ffee00 20%, transparent 20%),
+    radial-gradient(circle, #ff0808 20%, transparent 20%);
+  background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+  /*//background-position: 0% 80%, -5% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 85% 30%;*/
+}
+  
+.bubbly-button:after {
+    display: none;
+    bottom: -75%;
+    background-image:  
+    radial-gradient(circle, #ff0808 20%, transparent 20%), 
+    radial-gradient(circle, #ff0081 20%, transparent 20%),
+    radial-gradient(circle,  transparent 10%, #ff0081 15%, transparent 20%),
+    radial-gradient(circle, #ffffff 20%, transparent 20%),
+    radial-gradient(circle, #ff0081 20%, transparent 20%),
+    radial-gradient(circle, #ffee00 20%, transparent 20%),
+    radial-gradient(circle, #ffee00 20%, transparent 20%);
+  background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
+  /*//background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;*/
+}
+ 
+.bubbly-button:active {
+    transform: scale(0.9);
+    background-color: darken(#ff0808, 5%);
+    box-shadow: 0 2px 25px rgba(255, 0, 130, 0.2);
+}
+  
+.bubbly-button.animate:before {
+      display: block;
+      animation: topBubbles ease-in-out 0.75s forwards;
+}
+
+.bubbly-button.animate:after {
+      display: block;
+      animation: bottomBubbles ease-in-out 0.75s forwards;
+}
+
+@keyframes topBubbles {
+  0%{
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
+  }
+    50% {
+      background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;}
+ 100% {
+    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
+  background-size: 0% 0%, 0% 0%,  0% 0%,  0% 0%,  0% 0%,  0% 0%;
+  }
+}
+
+@keyframes bottomBubbles {
+  0%{
+    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
+  }
+  50% {
+    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;}
+ 100% {
+    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
+  background-size: 0% 0%, 0% 0%,  0% 0%,  0% 0%,  0% 0%,  0% 0%;
+  }
+}
+
+/**********************/
+/****Trainer Button****/
+/**********************/
+
+/*
+body {
+    margin: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: sans-serif;
+    font-size: 25px;
+    letter-spacing: 0.01em;
+  }
+*/
+  
+  .container > .row {
+    /*padding: .7em 1.25em .7em 0;*/
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  .container > div span {
+    padding-right: 10px;
+    font-size: 120%
+  }
+  .checkbox input {
+    display: none;
+  }
+  .checkbox input:checked + label {
+    background: rgb(255, 8, 8, 0.6)
+  }
+  .checkbox input:checked + label:before {
+    -moz-transform: translateX(1.2em);
+    -webkit-transform: translateX(1.2em);
+    transform: translateX(1.2em);
+  }
+  .checkbox label {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-tap-highlight-color: transparent;
+    width: 2.4em;
+    height: 1.2em;
+    padding: .2em;
+    background: #bcb8b8;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 1em;
+    -webkit-transition: background .1s ease;
+    transition: background .1s ease;
+  }
+  .checkbox label:before {
+    content: '';
+    display: block;
+    width: 1.2em;
+    height: 1.2em;
+    background: #e7e7e7;
+    box-shadow: 3px 5px 20px -3px rgba(0, 0, 0, 0.32);
+    border-radius: 50%;
+    -webkit-transition: -webkit-transform .1s ease;
+    transition: -webkit-transform .1s ease;
+    transition: transform .1s ease;
+    transition: transform .1s ease, -webkit-transform .1s ease;
+  }
+
+
+  /*************/
+  /****List*****/
+  /*************/

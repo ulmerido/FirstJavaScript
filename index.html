@@ -31,17 +31,19 @@
           <div id="player1-name-div">
             <h2 id="player1-name">Player 1</h2>
           </div>
-          <table id="player1Stats">
-            <tr>
-              <td class="player1 flex-container">2 Pawns: <label id="2pawns-player1" class="light">1</label></td>
-            </tr>
-            <tr>
-              <td class="player1 flex-container">Average Time: <label id="average-player1" class="light">0.00</label></td>
-            </tr>
-            <tr>
-              <td class="player1 flex-container">Score: <label id="score-player1" class="light">2</label></td>
-            </tr>
-          </table>
+          <div id="player2Stats-div">
+            <table id="player1Stats">
+              <tr>
+                <td class="player1 flex-container">2 Pawns: <label id="2pawns-player1" class="light">1</label></td>
+              </tr>
+              <tr>
+                <td class="player1 flex-container">Average Time: <label id="average-player1" class="light">0.00</label></td>
+              </tr>
+              <tr>
+                <td class="player1 flex-container">Score: <label id="score-player1" class="light">2</label></td>
+              </tr>
+            </table>
+          </div>
         </div>
 
         <div class="gameBoard">
@@ -52,31 +54,37 @@
           <div id="player2-name-div">
             <h2 id="player2-name">Player 2</h2>
           </div>
-          <table id="player2Stats">
-            <tr>
-              <td class="player2 flex-container">2 Pawns: <label id="2pawns-player2" class="light">1</label></td>
-            </tr>
-            <tr>
-              <td class="player2 flex-container">Average Time: <label id="average-player2" class="light">0.00</label></td>
-            </tr>
-            <tr>
-              <td class="player2 flex-container">Score: <label id="score-player2"> class="light"2</label></td>
-            </tr>
-          </table>
+          <div id=player2Stats-div>
+            <table id="player2Stats">
+              <tr>
+                <td class="player2 flex-container">2 Pawns: <label id="2pawns-player2" class="light">1</label></td>
+              </tr>
+              <tr>
+                <td class="player2 flex-container">Average Time: <label id="average-player2" class="light">0.00</label></td>
+              </tr>
+              <tr>
+                <td class="player2 flex-container">Score: <label id="score-player2"> class="light"2</label></td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
 
       <div class="flex-container-bottom">
         <div class="control-panel">
-          <div>
+          <!---div>
             <input type="checkbox" name="Trainer Mode" onchange="executeTrainerMode()">Trainer Mode
           </div>
-          <div class="start-panel">
-            <div id="timer-control">
-              <button id="start" onclick="startGame()"> Start </button> 
-              <button id="stop" onclick="technicalVictory()" disabled> Stop </button>
+          --->
+          <div class="container">
+            <div class="row">
+              <span>Trainer Mode</span>
+              <div class="checkbox">
+                <input type="checkbox" onchange="executeTrainerMode()" id="trainer"/>
+                <label for="trainer"></label>
+              </div>
             </div>
-            <div>
+            <div id="size-div">
               <select onchange="modifyBoardSize(this.value)">
                 <option value=6 selected>6X6</option>
                 <option value=8>8X8</option>
@@ -86,10 +94,16 @@
               </select>
             </div>
           </div>
+          <div class="start-panel">
+            <div id="timer-control">
+              <button id="start" class="bubbly-button" onclick="startGame()"> Start </button> 
+              <button id="stop" class="bubbly-button" onclick="technicalVictory()" disabled> Stop </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
+      
       <!-- The Modal -->
     <div id="myModal" class="modal">
 

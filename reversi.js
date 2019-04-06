@@ -1104,6 +1104,10 @@ function technicalVictory()
   }
 }
 
+/**************/
+/*Winner Alert*/
+/**************/
+
 var modal = document.getElementById('myModal');
 var modalText = document.getElementById('myModalText');
 var span = document.getElementsByClassName("close")[0];
@@ -1134,5 +1138,32 @@ window.onclick = function(event) {
   }
 }
 
+/*****************/
+/******Buttons****/
+/******************/
 
+var animateButton = function(e) {
+
+  e.preventDefault;
+  //reset animation
+  e.target.classList.remove('animate');
+  
+  e.target.classList.add('animate');
+  setTimeout(function(){
+    e.target.classList.remove('animate');
+  },700);
+};
+
+var bubblyButtons = document.getElementsByClassName("bubbly-button");
+
+for (var i = 0; i < bubblyButtons.length; i++) {
+  bubblyButtons[i].addEventListener('click', animateButton, false);
+}
+/*
+let winnermsg = document.getElementsByClassName("modal-content");
+winnermsg.addEventListener('mouseup', animateButton);
+*/
+/***********************/
+/*****List Button****/
+/**********************/
 
