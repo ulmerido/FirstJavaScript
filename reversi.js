@@ -4,13 +4,17 @@
 import { ePawnImageSrc } from "./Enums/ePawnImageSrc.js";
 import { ePawnType } from "./Enums/ePawnType.js";
 import * as GameLogic from "./GameLogic/GameMaster.js";
+import * as GameAI from "./GameLogic/AI.js";
+
 
 const k_SquareSize = 35;
 let m_Size = 8;
 let m_TrainerMode = false;
 let m_Timer;
 let m_GameActive = false;
-let m_Game = new GameLogic.GameMaster(m_Size);
+let m_Game ;
+let m_AI = new GameAI.AI(m_Game);
+const m_AIColor = ePawnType.Black;
 let m_Modal = document.getElementById('myModal');
 let m_ModalText = document.getElementById('myModalText');
 let m_Span = document.getElementsByClassName("close")[0];
@@ -29,6 +33,7 @@ let m_AnimateButton = function (e)
 
 function _nextTurn()
 {
+  console.log("nextTurn(UI)>>");
   let gameEnd;
   let winner;
   gameEnd = m_Game.nextTurn();
@@ -38,6 +43,19 @@ function _nextTurn()
   {
     _endGameAsWinner(winner);
   }
+ 
+  if(m_AIColor === m_Game.PlayerTurnType)
+  {
+    console.log("nextAI(UI)>>");
+    console.log(m_Game);
+    m_AI.makeAIMove(m_Game);
+    _printBoard();
+    _nextTurn();
+    console.log("nextAI(UI)<<");
+
+  }
+  console.log("nextTurn(UI)<<");
+
 }
 
 function _updateUIStats()
@@ -143,13 +161,10 @@ function onMouseClick_Cell(i, j)
   {
     if (m_Game.isValidMove(i, j))
     {
-      console.log(">> validMove");
-      //findCells(i, j);
       m_Game.updateMatrixOfPossibilities(i, j);
       m_Game.makeAMove();
       _printBoard();
       _nextTurn();
-      console.log("<< validMove");
     }
   }
 }
@@ -181,6 +196,7 @@ function _initBoard()
 {
   _createGameTable();
   m_Game = new GameLogic.GameMaster(m_Size);
+  m_AI = new GameAI.AI(m_Game);
   _linkBoardToHTML();
   _printBoard();
 }
@@ -313,8 +329,6 @@ function _pad(val)
 function _endGameAsWinner(winner)
 {
   _showWinner(winner);
-
-
   _endGame();
   // @ts-ignore
   document.getElementById("stop").disabled = true;

@@ -31,6 +31,7 @@ export class GameMaster
 
     isValidMove(i, j)
     {
+
         let x, y;
         let valid = false;
         if (this.Board[i][j].Pawn === ePawnType.Empty)
@@ -50,7 +51,7 @@ export class GameMaster
                 }
             }
         }
-
+       
         return valid;
     };
 
@@ -228,7 +229,6 @@ export class GameMaster
                 }
             }
         }
-
         this.matrixPossibilities[i][j] = this.PlayerTurnType;
     };
     
@@ -259,10 +259,8 @@ export class GameMaster
 
         while (this._inBoundaries(x, y))
         {
-            console.log(`checking [${ x },${ y }]...`);
             if (this.Board[x][y].Pawn === this.PlayerTurnType)
             {
-                console.log(`found Pawn! [${ x },${ y }]...`);
                 foundPawn = true;
                 break;
             }
@@ -271,7 +269,6 @@ export class GameMaster
             x += rowAdd;
         }
 
-        console.log(this.PlayerTurnType);
         if (foundPawn)
         {
             x = i;
@@ -281,12 +278,10 @@ export class GameMaster
 
                 if (this.Board[x][y].Pawn === this.PlayerTurnType)
                 {
-                    console.log(`done [${ x },${ y }]...`);
                     break;
                 }
                 else
                 {
-                    console.log(`cooloring [${ x },${ y }]...`);
                     this.matrixPossibilities[x][y] = this.PlayerTurnType;
                 }
                 y += colAdd;
@@ -295,7 +290,6 @@ export class GameMaster
         }
         else
         {
-            console.log("pawn not found...");
 
         }
     };
