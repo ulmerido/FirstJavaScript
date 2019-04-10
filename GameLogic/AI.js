@@ -1,133 +1,209 @@
 import { ePawnType } from "../Enums/ePawnType.js";
 import * as GameLogic from "./GameMaster.js";
 
-const corner = 16;
-const aroundCorner = -3;
-const edge = 2
-const inner = 0;
-const size = 8;
+const corner = 999;
+const aroundCorner = -64;
+const edge = 32
+const inner = -32;
+const k_Inifinity = 99999;
 
-let row1 = [16.16, -3.03, 0.99, 0.43, 0.43, 0.99, -3.03, 16.16];
-let row2 = [-4.12, -1.81, -0.08, -0.27, -0.27, -0.08, -1.81, -4.12];
-let row3 = [1.33, -0.04, 0.51, 0.07, 0.07, 0.51, -0.04, 1.33];
-let row4 = [0.63, -0.18, -0.04, -0.04, -0.01, -0.04, -0.18, 0.63];
+
+let col1 = [corner, aroundCorner, edge, edge, edge, edge, aroundCorner, corner];
+let col2 = [aroundCorner, aroundCorner, inner, inner, inner, inner, aroundCorner, aroundCorner];
+let col3 = [edge, inner, inner, inner, inner, inner, inner, edge];
+let col4 = [edge, inner, inner, inner, inner, inner, inner, edge];
 let ratingMatrix = new Array(8);
-ratingMatrix[0] = row1;
-ratingMatrix[1] = row2;
-ratingMatrix[2] = row3;
-ratingMatrix[3] = row4;
-ratingMatrix[4] = row4;
-ratingMatrix[5] = row3;
-ratingMatrix[6] = row2;
-ratingMatrix[7] = row1;
-
+ratingMatrix[0] = col1;
+ratingMatrix[1] = col2;
+ratingMatrix[2] = col3;
+ratingMatrix[3] = col4;
+ratingMatrix[4] = col4;
+ratingMatrix[5] = col3;
+ratingMatrix[6] = col2;
+ratingMatrix[7] = col1;
+let gDepth = 4;
 
 export class AI
 {
 
     constructor(i_Game)
     {
-        this.game = i_Game
+        this.game = i_Game;     
     }
-    
-    makeAIMove(i_Game)
-    {
-        this.game = i_Game;
-        console.log("makeAIMove>>");
-        let MaxEval = -999999;
-        let sonValue;
-        let saveX, saveY;
-        let savedGame = this._saveGame();
 
+    _setDepth()
+    {
+        switch (this.game.k_Size)
+        {
+            case 6:
+                gDepth = 5;
+                break;
+            case 8:
+                gDepth = 4;
+                break;
+            case 10:
+                gDepth = 2;
+                break;
+            case 12:
+                gDepth = 1;
+                break;
+            case 14:
+                gDepth = 1;
+                break;
+            case 16:
+                gDepth = 1;
+                break;
+        }
+    }
+
+    makeAIMove()
+    {
+        console.log("makeAIMove>>");
+        let maxVal = -k_Inifinity;
+        let minMaxVal;
+        let saveX = -1, saveY = -1;
+        let savedGame = this._saveGame();
+        this._setDepth();
         for (let x = 0; x < this.game.k_Size; x++)
         {
             for (let y = 0; y < this.game.k_Size; y++)
             {
-                console.log(`[x,y]  ${ x } ? ${ y }`);
                 if (this.game.isValidMove(x, y))
                 {
-                    console.log(`valied`);
-                    console.log(this.game);
-                    this.game.updateMatrixOfPossibilities(x, y);
-                    this.game.makeAMove(x, y);
-                    this.game._swapTurns();
-                    sonValue = this.calcMinMax(x, y, 0, true);
-                    if (sonValue > MaxEval)
+                    this.doAPossibileMove(x, y);
+                    minMaxVal = this.miniMax(x, y, gDepth, false, -k_Inifinity, k_Inifinity);
+                    if (minMaxVal > maxVal)
                     {
-                        MaxEval = sonValue;
-                        saveX = x,
+                        maxVal = minMaxVal;
+                        saveX = x;
                         saveY = y;
                     }
-                    console.log(this.game);
-                    console.log(`new Max Value ${ sonValue }`);
-                    this._restoreGame(savedGame);
-                    console.log(this.game);
 
+                    this._restoreGame(savedGame);
+                }
+            }
+        }
+
+        if (saveX !== -1)
+        {
+            console.log(`Moved[${ saveX } , ${ saveY }]`);
+            console.log(`Max Value${ maxVal }`);
+            this.game.updateMatrixOfPossibilities(saveX, saveY);
+            this.game.makeAMove(saveX, saveY);
+            this.game.nextTurn();
+        }
+        else
+        {
+            console.log("NO VALIED MOVES");
+        }
+
+        console.log("makeAIMove<<");
+    }
+
+    miniMax(i, j, depth, wantMax, alpha, beta)
+    {
+        let res = 0;
+        let dif;
+        let endGame = this.game.boardFull();
+        if (depth === 0 || endGame)
+        {
+            dif = this.game.m_Stats.Player2.score - this.game.m_Stats.Player1.score;
+            if (this.game.k_Size == 8)
+            {
+                res = this.game.m_Stats.Player2.StrategyScore - this.game.m_Stats.Player1.StrategyScore;
+            }
+            else
+            {
+                res = dif;
+            }
+
+            if (endGame)
+            {
+                if (dif > 0)
+                {
+                    res = k_Inifinity - 1;
                 }
                 else
                 {
-                    console.log(`not Valied`);
+                    res = -k_Inifinity + 1;
                 }
             }
         }
-        console.log(`[x,y]  ${ saveX } ? ${ saveY }`);
-        this.game.updateMatrixOfPossibilities(saveX, saveY);
-        this.game.makeAMove(saveX, saveY);
-        this.game.nextTurn();
-        console.log("makeAIMove<<");
-
-    }
-
-    calcMinMax(i, j, depth, isMaximizing)
-    {
-        console.log("calcMinMax>>");
-        let res = 0;
-        if (depth === 0)
-        {
-            res = ratingMatrix[i][j];
-            console.log(` [${ i }] [${ j }] = ${ res }`);
-        }
         else 
         {
-            res = _checkMoves(isMaximizing);
+            if (wantMax)
+            {
+                res = this.doMax(depth, alpha, beta);
+            }
+            else
+            {
+                res = this.doMin(depth, alpha, beta);
+            }
         }
 
-        console.log("calcMinMax<<");
         return res;
     }
 
-    _checkMoves(isMaximizing)
+    doMin(depth, alpha, beta)
     {
         let savedGame = this._saveGame();
-        let MaxEval = -999999;
-        let MinEval = 999999;
+        let MinEval = k_Inifinity;
+        let sonValue, res = 0;
         for (let x = 0; x < this.game.k_Size; x++)
         {
             for (let y = 0; y < this.game.k_Size; y++)
             {
                 if (this.game.isValidMove(x, y))
                 {
-                   
-                    this.game.updateMatrixOfPossibilities(x, y);
-                    this.game.makeAMove(x, y);
-                    this.game._swapTurns();
-                    sonValue = this.calcMinMax(x, y, depth - 1, !isMaximizing);
-                    if(isMaximizing)
-                    {
-                    res = Math.min(MaxEval, sonValue);
-                    }
-                    else
-                    {
-                        res = Math.min(MinEval,sonValue);
-                    }
+                    this.doAPossibileMove(x, y);
+                    sonValue = this.miniMax(x, y, depth - 1, true, alpha, beta);
+                    res = Math.min(MinEval, sonValue);
                     this._restoreGame(savedGame);
-                    console.log(this.game);
-                    console.log(`checkMoves<< ${ res } ? ${ sonValue }`);
+                    beta = Math.min(beta, sonValue);
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
                 }
             }
         }
 
         return res;
+    }
+
+    doMax(depth, alpha, beta)
+    {
+        let savedGame = this._saveGame();
+        let MaxVal = -k_Inifinity;
+        let sonValue, res = 0;
+        for (let x = 0; x < this.game.k_Size; x++)
+        {
+            for (let y = 0; y < this.game.k_Size; y++)
+            {
+                if (this.game.isValidMove(x, y))
+                {
+                    this.doAPossibileMove(x, y);
+                    sonValue = this.miniMax(x, y, depth - 1, false, alpha, beta);
+                    res = Math.max(MaxVal, sonValue);
+                    alpha = Math.max(alpha, sonValue);
+                    this._restoreGame(savedGame);
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+
+    doAPossibileMove(x, y)
+    {
+        this.game.updateMatrixOfPossibilities(x, y);
+        this.game.makeAMove(x, y);
+        this.game._swapTurns();
+        this.game._updateScore();
     }
 
     _saveGame()
@@ -136,6 +212,10 @@ export class AI
         {
             board: new Array(this.game.k_Size),
             playerTurn: this.game.PlayerTurnType,
+            score1: this.game.m_Stats.Player1.score,
+            score2: this.game.m_Stats.Player2.score,
+            StrategyScore1: this.game.m_Stats.Player1.StrategyScore,
+            StrategyScore2: this.game.m_Stats.Player2.StrategyScore,
         }
 
         for (let x = 0; x < this.game.k_Size; x++)
@@ -146,8 +226,6 @@ export class AI
                 savedGame.board[x][y] = this.game.Board[x][y].Pawn;
             }
         }
-        
-        console.log(savedGame);
 
         return savedGame;
     }
@@ -163,6 +241,10 @@ export class AI
         }
 
         this.game.PlayerTurnType = savedGame.playerTurn;
+        this.game.m_Stats.Player1.score = savedGame.score1;
+        this.game.m_Stats.Player2.score = savedGame.score2;
+        this.game.m_Stats.Player1.StrategyScore = savedGame.StrategyScore1;
+        this.game.m_Stats.Player2.StrategyScore = savedGame.StrategyScore2;
     }
 
 }

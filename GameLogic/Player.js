@@ -6,6 +6,8 @@ export class Player
         this.twoPawns = 1;
         this.average = 0;
         this.roundTimePlayer = [];
+        this.StrategyScore = 0;
+
     }
 }
 

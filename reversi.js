@@ -12,7 +12,7 @@ let m_Size = 8;
 let m_TrainerMode = false;
 let m_Timer;
 let m_GameActive = false;
-let m_Game ;
+let m_Game    ;
 let m_AI = new GameAI.AI(m_Game);
 const m_AIColor = ePawnType.Black;
 let m_Modal = document.getElementById('myModal');
@@ -21,9 +21,7 @@ let m_Span = document.getElementsByClassName("close")[0];
 let m_AnimateButton = function (e) 
 {
   e.preventDefault;
-  //reset animation
   e.target.classList.remove('animate');
-
   e.target.classList.add('animate');
   setTimeout(function ()
   {
@@ -33,28 +31,27 @@ let m_AnimateButton = function (e)
 
 function _nextTurn()
 {
-  console.log("nextTurn(UI)>>");
   let gameEnd;
   let winner;
   gameEnd = m_Game.nextTurn();
   _updateUIStats();
   winner = m_Game.getWinner(gameEnd);
-  if (winner)
+  _printBoard();
+  if (gameEnd)
   {
     _endGameAsWinner(winner);
   }
- 
-  if(m_AIColor === m_Game.PlayerTurnType)
+  else if(m_AIColor === m_Game.PlayerTurnType)
   {
-    console.log("nextAI(UI)>>");
-    console.log(m_Game);
-    m_AI.makeAIMove(m_Game);
+    m_AI.makeAIMove();
+    _updateUIStats();
     _printBoard();
-    _nextTurn();
-    console.log("nextAI(UI)<<");
-
+    if(m_Game.boardFull())
+    {
+      let win = m_Game.getWinner(m_Game.boardFull());
+      _endGameAsWinner(win);
+    }
   }
-  console.log("nextTurn(UI)<<");
 
 }
 
@@ -485,7 +482,6 @@ function _closeAllSelect(i_Element)
 function Run()
 {
   _initBoard();
-  console.log(m_Game);
   document.getElementById('trainer').onchange = function () { onChange_TrainMode(); };
   document.getElementById('start').onclick = function () { onClick_Start(); };
   document.getElementById('stop').onclick = function () { onClick_Stop(); };

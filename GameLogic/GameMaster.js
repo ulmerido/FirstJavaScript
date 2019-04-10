@@ -1,7 +1,25 @@
 import { ePawnType } from "../Enums/ePawnType.js";
 import * as Module from "./Stats.js";
 
+const corner = 99;
+const aroundCorner = -8;
+const edge = 32
+const inner = 0;
 
+// Game Strategy score mechanism
+let col1 = [corner, aroundCorner, edge, edge, edge, edge, aroundCorner, corner];
+let col2 = [aroundCorner, aroundCorner, inner, inner, inner, inner, aroundCorner, aroundCorner];
+let col3 = [edge, inner, inner, inner, inner, inner, inner, edge];
+let col4 = [edge, inner, inner, inner, inner, inner, inner, edge];
+let ratingMatrix = new Array(8);
+ratingMatrix[0] = col1;
+ratingMatrix[1] = col2;
+ratingMatrix[2] = col3;
+ratingMatrix[3] = col4;
+ratingMatrix[4] = col4;
+ratingMatrix[5] = col3;
+ratingMatrix[6] = col2;
+ratingMatrix[7] = col1;
 
 
 export class GameMaster
@@ -15,6 +33,7 @@ export class GameMaster
         this._initBoardPawns()
         this.PlayerTurnType = ePawnType.White;
         this.matrixPossibilities = [];
+        this.strategyScoreAdd = 0;
     };
 
     nextTurn()
@@ -51,7 +70,7 @@ export class GameMaster
                 }
             }
         }
-       
+
         return valid;
     };
 
@@ -152,6 +171,24 @@ export class GameMaster
         }
     };
 
+    boardFull()
+    {
+        let full = true;;
+        for (let i = 0; i < this.k_Size; i++)
+        {
+            for (let j = 0; j < this.k_Size; j++)
+            {
+                if (this.Board[i][j].Pawn === ePawnType.Empty)
+                {
+                    full = false;
+                }
+            }
+        }
+
+        return full;
+
+    }
+
     _updateScore()
     {
         let counter1 = 0;
@@ -230,8 +267,12 @@ export class GameMaster
             }
         }
         this.matrixPossibilities[i][j] = this.PlayerTurnType;
+        if (this.k_Size == 8)
+        { 
+            this.strategyScoreAdd = ratingMatrix[i][j]; 
+        }
     };
-    
+
     makeAMove()
     {
         for (let i = 0; i < this.k_Size; i++)
@@ -244,6 +285,18 @@ export class GameMaster
                 }
             }
         }
+
+        if (this.PlayerTurnType === ePawnType.White)
+        {
+            this.m_Stats.Player1.StrategyScore += this.strategyScoreAdd;
+        }
+        else
+        {
+            this.m_Stats.Player2.StrategyScore += this.strategyScoreAdd;
+        }
+
+
+
     };
 
     _inBoundaries(x, y)
