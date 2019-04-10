@@ -22,7 +22,9 @@ class Player
         this.score = 2;
         this.twoPawns = 1;
         this.average = 0;
+        this.averageGames = 0;
         this.roundTimePlayer = [];
+        this.roundTimePlayerGames = [];
         this.StrategyScore = 0;
 
     }
@@ -48,6 +50,10 @@ class Stats
         this.Player2.twoPawns = 1;
         this.Player1.roundTimePlayer = [];
         this.Player2.roundTimePlayer = [];
+        this.Player1.averageGames = 0;
+        this.Player2.averageGames = 0;
+        this.Player1.roundTimePlayerGames = [];
+        this.Player2.roundTimePlayerGames = [];
         document.getElementById("minutes").innerHTML = "00";
         document.getElementById("seconds").innerHTML = "00";
     }
@@ -92,6 +98,8 @@ gRatingMatrixSize10[8] = col20;
 gRatingMatrixSize10[9] = col10;
 //
 let gDepth = 4;
+let gameStatus = false;
+let anotherMatch = false;
 
 class GameMaster
 {
@@ -112,6 +120,10 @@ class GameMaster
         let noMoreMoves;
         this._updateStats();
         this._updateAverageTime();
+        if(anotherMatch)
+        {
+          this._calcAnotherGame(); 
+        }
         this._updateRounds();
         noMoreMoves = this._updateScore();
         this._update2Pawns();
@@ -221,6 +233,23 @@ class GameMaster
             this.m_Stats.Player2.roundTimePlayer.forEach((timeSlot) => { sum += timeSlot; });
             this.m_Stats.Player2.average = sum / this.m_Stats.Player2.roundTimePlayer.length;
         }
+    };
+
+    _calcAnotherGame() 
+    {
+      let sum = 0;
+      if(this.PlayerTurnType === ePawnType.White)
+      {
+        sum = this.m_Stats.Player1.average;
+        this.m_Stats.Player1.roundTimePlayerGames.forEach((timeSlot) => { sum += timeSlot; });
+        this.m_Stats.Player1.averageGames = sum / (this.m_Stats.Player1.roundTimePlayerGames.length + 1);
+      }
+      else
+      {
+        sum = this.m_Stats.Player2.average;
+        this.m_Stats.Player2.roundTimePlayerGames.forEach((timeSlot) => { sum += timeSlot; });
+        this.m_Stats.Player2.averageGames = sum / (this.m_Stats.Player2.roundTimePlayerGames.length + 1);
+      }
     };
 
     _updateStats()
@@ -345,39 +374,35 @@ class GameMaster
         }
         else if(this.k_Size == 10)
         {
-       //   console.log(`${i},${j}`);
-       if(i==8 && j ==1)
-       {
-         console.log("Hi");
-       }
+          if(i==8 && j ==1)
+          {
+            console.log("Hi");
+          }
           this.strategyScoreAdd = gRatingMatrixSize10[i][j]; 
         }
     };
 
     makeAMove()
     {
-        for (let i = 0; i < this.k_Size; i++)
-        {
-            for (let j = 0; j < this.k_Size; j++)
-            {
-                if (this.matrixPossibilities[i][j] !== ePawnType.Empty)
-                {
-                    this.Board[i][j].Pawn = this.matrixPossibilities[i][j];
-                }
-            }
-        }
+      for (let i = 0; i < this.k_Size; i++)
+      {
+          for (let j = 0; j < this.k_Size; j++)
+          {
+              if (this.matrixPossibilities[i][j] !== ePawnType.Empty)
+              {
+                  this.Board[i][j].Pawn = this.matrixPossibilities[i][j];
+              }
+          }
+      }
 
-        if (this.PlayerTurnType === ePawnType.White)
-        {
-            this.m_Stats.Player1.StrategyScore += this.strategyScoreAdd;
-        }
-        else
-        {
-            this.m_Stats.Player2.StrategyScore += this.strategyScoreAdd;
-        }
-
-
-
+      if (this.PlayerTurnType === ePawnType.White)
+      {
+          this.m_Stats.Player1.StrategyScore += this.strategyScoreAdd;
+      }
+      else
+      {
+          this.m_Stats.Player2.StrategyScore += this.strategyScoreAdd;
+      }
     };
 
     _inBoundaries(x, y)
@@ -414,7 +439,7 @@ class GameMaster
                 {
                     break;
                 }
-                else
+                else if(this.Board[x][y].Pawn !== ePawnType.Empty)
                 {
                     this.matrixPossibilities[x][y] = this.PlayerTurnType;
                 }
@@ -703,6 +728,12 @@ function _nextTurn()
 
 }
 
+function _setAverageGames() 
+{
+  mGame.m_Stats.Player1.roundTimePlayerGames.push(mGame.m_Stats.Player1.average);
+  mGame.m_Stats.Player2.roundTimePlayerGames.push(mGame.m_Stats.Player2.average);
+};
+
 function _updateUIStats()
 {
   let player1 = document.getElementById("stats1-container");
@@ -716,6 +747,10 @@ function _updateUIStats()
   document.getElementById("2pawns-player2").innerHTML = `${ mGame.m_Stats.Player2.twoPawns }`;
   document.getElementById("score-player1").innerHTML = `${ mGame.m_Stats.Player1.score }`;
   document.getElementById("score-player2").innerHTML = `${ mGame.m_Stats.Player2.score }`;
+  
+  document.getElementById("averageGames-player1").innerHTML = `${ mGame.m_Stats.Player1.averageGames.toFixed(2) }`;
+  document.getElementById("averageGames-player2").innerHTML = `${ mGame.m_Stats.Player2.averageGames.toFixed(2) }`;
+
   document.getElementById("rounds").innerHTML = `${ mGame.m_Stats.roundsNum }`;
   if (mGame.PlayerTurnType === ePawnType.Black)
   {
@@ -876,12 +911,10 @@ function onMouseEnter_Cell(i, j)
                 case ePawnType.Empty:
                   mGame.Board[x][y].Img.src = ePawnImageSrc.Empty;
                   break;
-
               }
             }
           }
         }
-
       }
     }
   }
@@ -920,9 +953,11 @@ function _startGame()
   mGameActive = true;
   _updateUIStats();
   _startTimer();
+  gameStatus = true;
   document.getElementById("average-player1").innerHTML = `${ mGame.m_Stats.Player1.average.toFixed(2) }`;
   document.getElementById("average-player2").innerHTML = `${ mGame.m_Stats.Player2.average.toFixed(2) }`;
   document.getElementById("stop").disabled = false;
+  document.getElementById("selected-size").className = "select-selected-off";
 
   let temp = new Date();
   if (mGame.PlayerTurnType === ePawnType.White)
@@ -974,7 +1009,9 @@ function _pad(val)
 function _endGameAsWinner(winner)
 {
   _showWinner(winner);
+  _setAverageGames();
   _endGame();
+  anotherMatch = true;
   // @ts-ignore
   document.getElementById("stop").disabled = true;
   let table = document.getElementById("myBoard");
@@ -985,6 +1022,7 @@ function _endGameAsWinner(winner)
 
 function _endGame()
 {
+  gameStatus = false;
   // @ts-ignore
   document.getElementById("start").disabled = false;
   document.getElementById("selected-size").className = "select-selected";
@@ -1040,6 +1078,7 @@ function _initListButtons()
     selElement = x[i].getElementsByTagName("select")[0];
     a = document.createElement("DIV");
     a.setAttribute("class", "select-selected");
+    a.id = "selected-size";
     a.innerHTML = selElement.options[selElement.selectedIndex].innerHTML;
     x[i].appendChild(a);
     b = document.createElement("DIV");
@@ -1088,10 +1127,13 @@ function _initListButtons()
     {
       /*when the select box is clicked, close any other select boxes,
       and open/close the current select box:*/
-      e.stopPropagation();
-      _closeAllSelect(this);
-      this.nextSibling.classList.toggle("select-hide");
-      this.classList.toggle("select-arrow-active");
+      if(!gameStatus)
+      {
+        e.stopPropagation();
+        _closeAllSelect(this);
+        this.nextSibling.classList.toggle("select-hide");
+        this.classList.toggle("select-arrow-active");
+      }
     });
   }
 
