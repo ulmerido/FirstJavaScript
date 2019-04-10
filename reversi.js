@@ -1,5 +1,4 @@
 //  @ts-check
-console.log("hello");
 const ePawnImageSrc =
 {
   Black: "piece-1.gif",
@@ -494,7 +493,6 @@ class AI
 
   makeAIMove()
   {
-    console.log("makeAIMove>>");
     let maxVal = -k_Inifinity;
     let minMaxVal;
     let saveX = -1, saveY = -1;
@@ -522,8 +520,6 @@ class AI
 
     if (saveX !== -1)
     {
-      console.log(`Moved[${ saveX } , ${ saveY }]`);
-      console.log(`Max Value${ maxVal }`);
       this.game.updateMatrixOfPossibilities(saveX, saveY);
       this.game.makeAMove(saveX, saveY);
     }
@@ -531,8 +527,6 @@ class AI
     {
       console.log("NO VALIED MOVES");
     }
-
-    console.log("makeAIMove<<");
   }
 
   miniMax(i, j, depth, wantMax, alpha, beta)
