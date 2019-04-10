@@ -316,6 +316,11 @@ class GameMaster
 
         this.m_Stats.Player1.score = counter1;
         this.m_Stats.Player2.score = counter2;
+        
+        if (counter1 === 0 || counter2 === 0)
+        {
+          full = true;
+        }
 
         return full;
     };

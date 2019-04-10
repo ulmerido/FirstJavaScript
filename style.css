@@ -10,11 +10,14 @@ body {
     text-align: center;
 }
 
-.light {
-    font-weight: normal;
+@media only screen and (max-width: 1300px), (max-height: 680px) {
+  body {
+    zoom: 80%;
+  }
 }
 
 .flex-container {
+    zoom: 90%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap; 
@@ -215,10 +218,6 @@ body {
     flex-wrap: wrap; 
     align-items: flex-start;
     justify-content: center;  
-}
-
-.start-panel > div {
-    margin: 10px;
 }
 
 .control-panel {
