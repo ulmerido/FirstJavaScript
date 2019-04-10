@@ -178,13 +178,27 @@ body {
 /*************BOTTOM***********/
 /*******************************/
 
+/*
+.checkboxes-contrainer {
+  display: flex;
+  flex-direction: row; 
+  flex-wrap: wrap;  
+  align-items: center;
+  justify-content: space-between;   
+  padding: 0px;
+}
+
+.checkboxes-container > div {
+  margin: 0 30px; 
+}
+*/
 .container {
-    display: flex;
-    flex-direction: row; 
-    flex-wrap: wrap;  
-    align-items: center;
-    justify-content: space-between;   
-    padding: 0px;
+  display: flex;
+  flex-direction: row; 
+  flex-wrap: wrap;  
+  align-items: center;
+  justify-content: space-between;   
+  padding: 0px;
 }
 
 .container > div {

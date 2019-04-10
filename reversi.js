@@ -64,30 +64,32 @@ let col1 = [kCorner, kAroundCorner, kEdge, kEdge, kEdge, kEdge, kAroundCorner, k
 let col2 = [kAroundCorner, kAroundCorner, kInner, kInner, kInner, kInner, kAroundCorner, kAroundCorner];
 let col3 = [kEdge, kInner, kInner, kInner, kInner, kInner, kInner, kEdge];
 let col4 = [kEdge, kInner, kInner, kInner, kInner, kInner, kInner, kEdge];
-let gRatingMatrix = new Array(8);
-gRatingMatrix[0] = col1;
-gRatingMatrix[1] = col2;
-gRatingMatrix[2] = col3;
-gRatingMatrix[3] = col4;
-gRatingMatrix[4] = col4;
-gRatingMatrix[5] = col3;
-gRatingMatrix[6] = col2;
-gRatingMatrix[7] = col1;
+let gRatingMatrixSize8 = new Array(8);
+gRatingMatrixSize8[0] = col1;
+gRatingMatrixSize8[1] = col2;
+gRatingMatrixSize8[2] = col3;
+gRatingMatrixSize8[3] = col4;
+gRatingMatrixSize8[4] = col4;
+gRatingMatrixSize8[5] = col3;
+gRatingMatrixSize8[6] = col2;
+gRatingMatrixSize8[7] = col1;
 //
 
 let col10 = [kCorner, kAroundCorner, kEdge, kEdge, kEdge, kEdge,kEdge,kEdge, kAroundCorner, kCorner];
 let col20 = [kAroundCorner, kAroundCorner,kInner,kInner, kInner, kInner, kInner, kInner, kAroundCorner, kAroundCorner];
 let col30 = [kEdge,kInner,kInner, kInner, kInner, kInner, kInner, kInner, kInner, kEdge];
 let col40 = [kEdge,kInner,kInner, kInner, kInner, kInner, kInner, kInner, kInner, kEdge];
-let gRatingMatrix10On10 = new Array(10);
-gRatingMatrix10On10[0] = col10;
-gRatingMatrix10On10[1] = col20;
-gRatingMatrix10On10[2] = col30;
-gRatingMatrix10On10[3] = col40;
-gRatingMatrix10On10[4] = col40;
-gRatingMatrix10On10[5] = col30;
-gRatingMatrix10On10[6] = col20;
-gRatingMatrix10On10[7] = col10;
+let gRatingMatrixSize10 = new Array(10);
+gRatingMatrixSize10[0] = col10;
+gRatingMatrixSize10[1] = col20;
+gRatingMatrixSize10[2] = col30;
+gRatingMatrixSize10[3] = col40;
+gRatingMatrixSize10[4] = col40;
+gRatingMatrixSize10[5] = col40;
+gRatingMatrixSize10[6] = col40;
+gRatingMatrixSize10[7] = col30;
+gRatingMatrixSize10[8] = col20;
+gRatingMatrixSize10[9] = col10;
 //
 let gDepth = 4;
 
@@ -335,10 +337,20 @@ class GameMaster
                 }
             }
         }
+
         this.matrixPossibilities[i][j] = this.PlayerTurnType;
-        if (this.k_Size == 8)
+        if (this.k_Size === 8)
         { 
-            this.strategyScoreAdd = gRatingMatrix[i][j]; 
+            this.strategyScoreAdd = gRatingMatrixSize8[i][j]; 
+        }
+        else if(this.k_Size == 10)
+        {
+       //   console.log(`${i},${j}`);
+       if(i==8 && j ==1)
+       {
+         console.log("Hi");
+       }
+          this.strategyScoreAdd = gRatingMatrixSize10[i][j]; 
         }
     };
 
@@ -416,8 +428,6 @@ class GameMaster
         }
     };
 }
-
-
 class AI
 {
 
@@ -646,16 +656,17 @@ class AI
 
 const kSquareSize = 30;
 let mSize = 10;
-let mTrainerMode = false;
-let mTimer;
+let gAIMode = false;
+let gTrainerMode = false;
+let gTimer;
 let mGameActive = false;
 let mGame    ;
-let mAI = new AI(mGame);
-const m_AIColor = ePawnType.Black;
-let m_Modal = document.getElementById('myModal');
-let m_ModalText = document.getElementById('myModalText');
-let m_Span = document.getElementsByClassName("close")[0];
-let m_AnimateButton = function (e) 
+let gAI = new AI(mGame);
+const kAIColor = ePawnType.Black;
+let gModal = document.getElementById('myModal');
+let gModalText = document.getElementById('myModalText');
+let gSpan = document.getElementsByClassName("close")[0];
+let gAnimateButton = function (e) 
 {
   e.preventDefault;
   e.target.classList.remove('animate');
@@ -678,9 +689,9 @@ function _nextTurn()
   {
     _endGameAsWinner(winner);
   }
-  else if(m_AIColor === mGame.PlayerTurnType)
+  else if((kAIColor === mGame.PlayerTurnType) && (gAIMode))
   {
-    mAI.makeAIMove();
+    gAI.makeAIMove();
     _updateUIStats();
     _printBoard();
     if(mGame.boardFull())
@@ -721,13 +732,13 @@ function _updateUIStats()
 
 function onChange_TrainMode()
 {
-  if (mTrainerMode === false)
+  if (gTrainerMode === false)
   {
-    mTrainerMode = true;
+    gTrainerMode = true;
   }
   else
   {
-    mTrainerMode = false;
+    gTrainerMode = false;
   }
 }
 
@@ -830,7 +841,7 @@ function _initBoard()
 {
   _createGameTable();
   mGame = new GameMaster(mSize);
-  mAI = new AI(mGame);
+  gAI = new AI(mGame);
   _linkBoardToHTML();
   _printBoard();
 }
@@ -843,7 +854,7 @@ function onMouseEnter_Cell(i, j)
     {
 
       mGame.Board[i][j].Img.src = _getPlayerTurnImage();
-      if (mTrainerMode)
+      if (gTrainerMode)
       {
         mGame.updateMatrixOfPossibilities(i, j);
         for (let x = 0; x < mSize; x++)
@@ -933,7 +944,7 @@ function _startTimer()
   let secondsLabel = document.getElementById("seconds");
   let totalSeconds = 0;
   let timer = setInterval(setTime, 1000);
-  mTimer = timer;
+  gTimer = timer;
 
   function setTime()
   {
@@ -976,7 +987,8 @@ function _endGame()
 {
   // @ts-ignore
   document.getElementById("start").disabled = false;
-  clearInterval(mTimer);
+  document.getElementById("selected-size").className = "select-selected";
+  clearInterval(gTimer);
 }
 
 function _modifyBoardSize(size)
@@ -998,14 +1010,14 @@ function onClick_Stop()
 
 function _showWinner(winner)
 {
-  m_Modal.style.display = "block";
+  gModal.style.display = "block";
   if (winner === ePawnType.Tie)
   {
-    m_ModalText.innerHTML = "There is a Tie";
+    gModalText.innerHTML = "There is a Tie";
   }
   else
   {
-    m_ModalText.innerHTML = `The Winner is: The ${ winner } Player`;
+    gModalText.innerHTML = `The Winner is: The ${ winner } Player`;
   }
 }
 
@@ -1015,7 +1027,7 @@ function _initBubblyButtons()
 
   for (let i = 0; i < bubblyButtons.length; i++) 
   {
-    bubblyButtons[i].addEventListener('click', m_AnimateButton, false);
+    bubblyButtons[i].addEventListener('click', gAnimateButton, false);
   }
 }
 
@@ -1116,14 +1128,21 @@ function _closeAllSelect(i_Element)
   }
 }
 
+function onChange_AI()
+{
+ gAIMode = !gAIMode;
+}
+
 function Run()
 {
   _initBoard();
   document.getElementById('trainer').onchange = function () { onChange_TrainMode(); };
   document.getElementById('start').onclick = function () { onClick_Start(); };
   document.getElementById('stop').onclick = function () { onClick_Stop(); };
-  m_Span.onclick = function () { m_Modal.style.display = "none"; };
-  window.onclick = function (event) { if (event.target == m_Modal) { m_Modal.style.display = "none"; } };
+  document.getElementById('AI').onchange = function () { onChange_AI(); };
+
+  gSpan.onclick = function () { gModal.style.display = "none"; };
+  window.onclick = function (event) { if (event.target == gModal) { gModal.style.display = "none"; } };
   _initBubblyButtons();
   _initListButtons();
   document.addEventListener("click", onClick_Document);
