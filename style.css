@@ -5,19 +5,10 @@
 body {
     background-image: url("wood-background.jpg");
     font-family: 'Atma';
-    font-size: 22px;
+    font-size: 18px;
     font-weight: bold;
     text-align: center;
 }
-
-/*
-body{
-    font-size: 16px;
-    font-family: 'Helvetica', 'Arial', sans-serif;
-    text-align: center;
-    background-color: #f8faff;
-  }
-*/
 
 .light {
     font-weight: normal;
@@ -33,9 +24,8 @@ body{
 
 
 .flex-container > div {
-    margin: 10px;
+    margin: 6px;
 }
-
 
 /*****************************/
 /*************TOP*************/
@@ -48,7 +38,7 @@ body{
 }
 
 .flex-container-head > div {
-    margin: 10px;
+    margin: 6px;
 }
 
 /***********SCOREBOARD***********/
@@ -73,7 +63,6 @@ body{
     padding: 10px 150px;
 }
 
-
 /*********************************/
 /****************MID**************/
 /********************************/
@@ -89,10 +78,17 @@ body{
 }
 
 .flex-container-mid > div {
-    margin: 10px;
+    margin: 6px;
 }
 
 /************BOARD*****************/
+
+.gameBoard {
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+  
+}
 
 #myBoard {
     border-collapse: collapse;
@@ -110,23 +106,17 @@ body{
 
 /*************STATS***************/
 
-/*
-#player1Stats-div, #player2Stats-div {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-*/
-
 #stats1-container, #stats2-container {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap; 
     align-items: center;
     justify-content: center; 
-    
 }
 
 #player1-name, #player2-name {
     margin: 0;
+    font-size: 30px !important;
 }
 
 .notcurrent-player {
@@ -139,7 +129,6 @@ body{
 .current-player {
     border-radius: 25px;
     background-color: rgba(255, 0, 0, 0.5);
-    /*background-color: rgba(247, 47, 47, 0.5);*/
     border: 3px solid black;
     padding: 0 10px;
     box-shadow: 0 2px 25px rgba(255, 255, 255, 0.5);
@@ -158,19 +147,9 @@ body{
     border: 3px solid black;
 }
 
-#player1-name-div, #player2-name-div {
-    margin: 10px 0;
+#player1Stats-div, #player2Stats-div {
+  margin: 5px 0;
 }
-
-/*
-#player1Stats {
-    background-color: rgba(0, 0, 0, 0.3);;
-}
-
-#player2Stats {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-*/
 
 #player1Stats tr, #player2Stats tr {
     border-radius: 25px;
@@ -195,7 +174,6 @@ body{
 }
 
 
-
 /******************************/
 /*************BOTTOM***********/
 /*******************************/
@@ -214,7 +192,7 @@ body{
 }
 
 .flex-container-bottom > div {
-    margin: 10px;
+    margin: 6px;
 }
 
 .start-panel {
@@ -235,9 +213,7 @@ body{
     flex-wrap: wrap;
     align-items: center;
     justify-content: center; 
-    /*border: 3px solid black;*/
     border-radius: 25px;
-    /*background-color: wheat;*/ 
 }
 
 #timer-control {
@@ -250,33 +226,27 @@ body{
     margin: 10px;
 }
 
-/*
-.control-panel > * {
-    margin: 10px;
-}*/
-
-
 
 /**************OTHER****************/
 
 .game-off tr:nth-child(even) td:nth-child(even){
     background-color: #07660B;
-    background-image: url("square1.jpg");
+    /*background-image: url("square1.jpg");*/
 }
 
 .game-off tr:nth-child(odd) td:nth-child(odd){
     background-color: #07660B;
-    background-image: url("square1.jpg");
+    /*background-image: url("square1.jpg");*/
 }
 
 .game-off tr:nth-child(odd) td:nth-child(even){
     background-color: #028906;
-    background-image: url("square2.jpg");
+    /*background-image: url("square2.jpg");*/
 }
 
 .game-off tr:nth-child(even) td:nth-child(odd){
     background-color: #028906;
-    background-image: url("square2.jpg");
+    /*background-image: url("square2.jpg");*/
 }
 
 .game-on tr:nth-child(even) td:nth-child(even){
@@ -296,7 +266,6 @@ body{
 }
 
 
-
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
@@ -311,6 +280,16 @@ body{
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+/*
+.modal {
+    animation: topBubbles ease-in-out 0.75s forwards;
+}
+
+.modal {
+    animation: bottomBubbles ease-in-out 0.75s forwards;
+}
+*/
+
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
@@ -321,6 +300,8 @@ body{
     width: 80%; /* Could be more or less, depending on screen size */
     text-align: center;
     font-size: 150%;
+    animation: colorchange 20s; /* animation-name followed by duration in seconds*/
+         /* you could also use milliseconds (ms) or something like 2.5s */
 }
 
 /* The Close Button */
@@ -338,58 +319,25 @@ body{
     cursor: pointer;
 }
 
-/*
-#player1Stats tr:nth-child(odd){
-    background-color: #028906 !important;
-    background-image: url(square1.jpg);
+@keyframes colorchange
+{
+  0%   {background: yellow;}
+  10%  {background: rgb(255, 255, 255);}
+  20%  {background: rgb(0, 255, 136);}
+  30%  {background: rgb(38, 211, 211);}
+  40%  {background: rgb(240, 51, 155);}
+  50%  {background: rgb(198, 43, 230);}
+  60%  {background: rgb(29, 80, 248);}
+  70%  {background: green;}
+  80%  {background: rgb(126, 255, 126);}
+  90%  {background: rgb(230, 192, 68);}
+  100% {background: yellow;}
 }
 
-#player1Stats tr:nth-child(even){
-    background-color: #028906 !important;
-    background-image: url(square2.jpg);
-}
-
-#player2Stats tr:nth-child(odd){
-    background-color: #07660B !important;
-    background-image: url(square2.jpg);
-}
-
-#player2Stats tr:nth-child(even){
-    background-color: #07660B !important;
-    background-image: url(square1.jpg);
-}
-*/
-
-/******************/
-
-/*
-.game-on tr:nth-child(even) td:hover:nth-child(odd){
-    background-color: rgb(122, 9, 52);
-}
-
-.game-on tr:nth-child(odd) td:hover:nth-child(even){
-    background-color: rgb(122, 9, 52);
-}
-
-.game-on tr:nth-child(even) td:hover:nth-child(even){
-    background-color: rgb(8, 167, 161);
-}
-
-.game-on tr:nth-child(odd) td:hover:nth-child(odd){
-    background-color: rgb(8, 167, 161);
-}
-
-*/
 
 /***************************************/
 /************ Start Stop Buttons*******/
 /*************************************/
-/*
-$fuschia: #ff0081;
-#ff0081: $fuschia;
-$button-text-color: #fff;
-$baby-blue: #f8faff;
-*/
 
 .bubbly-button{
   font-family: "Atma";
@@ -408,8 +356,7 @@ $baby-blue: #f8faff;
   cursor: pointer;
   position: relative;
   transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
-  box-shadow: 0 2px 25px rgba(255, 255, 255, 0.5);
-  
+  box-shadow: 0 2px 25px rgba(255, 255, 255, 0.5); 
 }
 
 .bubbly-button:disabled {
@@ -446,7 +393,6 @@ $baby-blue: #f8faff;
     radial-gradient(circle, #ffee00 20%, transparent 20%),
     radial-gradient(circle, #ff0808 20%, transparent 20%);
   background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
-  /*//background-position: 0% 80%, -5% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 85% 30%;*/
 }
   
 .bubbly-button:after {
@@ -461,7 +407,6 @@ $baby-blue: #f8faff;
     radial-gradient(circle, #ffee00 20%, transparent 20%),
     radial-gradient(circle, #ffee00 20%, transparent 20%);
   background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
-  /*//background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;*/
 }
  
 .bubbly-button:active {
@@ -508,27 +453,7 @@ $baby-blue: #f8faff;
 /****Trainer Button****/
 /**********************/
 
-/*
-body {
-    margin: 0;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    min-height: 100vh;
-    font-family: sans-serif;
-    font-size: 25px;
-    letter-spacing: 0.01em;
-  }
-*/
-  
   .container > .row {
-    /*padding: .7em 1.25em .7em 0;*/
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -539,21 +464,26 @@ body {
     -ms-flex-align: center;
     align-items: center;
   }
+
   .container > div span {
     padding-right: 10px;
     font-size: 120%
   }
+
   .checkbox input {
     display: none;
   }
+
   .checkbox input:checked + label {
     background: rgb(255, 8, 8, 0.6)
   }
+
   .checkbox input:checked + label:before {
     -moz-transform: translateX(1.2em);
     -webkit-transform: translateX(1.2em);
     transform: translateX(1.2em);
   }
+
   .checkbox label {
     position: relative;
     display: -webkit-box;
@@ -572,6 +502,7 @@ body {
     -webkit-transition: background .1s ease;
     transition: background .1s ease;
   }
+  
   .checkbox label:before {
     content: '';
     display: block;
@@ -603,6 +534,11 @@ body {
     border-radius: 25px;
   }
   
+  .select-selected-off {
+    background-color: #bcb8b8;
+    border-radius: 25px;
+  }
+
   /* Style the arrow inside the select element: */
   .select-selected:after {
     position: absolute;
@@ -622,7 +558,7 @@ body {
   }
   
   /* style the items (options), including the selected item: */
-  .select-items div,.select-selected {
+  .select-items div,.select-selected,.select-selected-off {
     color: #ffffff;
     padding: 8px 16px;
     border: 1px solid transparent;

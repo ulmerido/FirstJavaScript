@@ -9,8 +9,8 @@ const ePawnImageSrc =
 
 const ePawnType =
 {
-  Black: "B",
-  White: "W",
+  Black: "Black",
+  White: "White",
   Tie: "Tie",
   Empty: "*",
 }
@@ -54,25 +54,40 @@ class Stats
 
 }
 
-const corner = 99;
-const aroundCorner = -8;
-const edge = 32
-const inner = 0;
+const kCorner = 99;
+const kAroundCorner = -8;
+const kEdge = 32
+const kInner = 0;
 const k_Inifinity = 99999;
 // Game Strategy score mechanism
-let col1 = [corner, aroundCorner, edge, edge, edge, edge, aroundCorner, corner];
-let col2 = [aroundCorner, aroundCorner, inner, inner, inner, inner, aroundCorner, aroundCorner];
-let col3 = [edge, inner, inner, inner, inner, inner, inner, edge];
-let col4 = [edge, inner, inner, inner, inner, inner, inner, edge];
-let ratingMatrix = new Array(8);
-ratingMatrix[0] = col1;
-ratingMatrix[1] = col2;
-ratingMatrix[2] = col3;
-ratingMatrix[3] = col4;
-ratingMatrix[4] = col4;
-ratingMatrix[5] = col3;
-ratingMatrix[6] = col2;
-ratingMatrix[7] = col1;
+let col1 = [kCorner, kAroundCorner, kEdge, kEdge, kEdge, kEdge, kAroundCorner, kCorner];
+let col2 = [kAroundCorner, kAroundCorner, kInner, kInner, kInner, kInner, kAroundCorner, kAroundCorner];
+let col3 = [kEdge, kInner, kInner, kInner, kInner, kInner, kInner, kEdge];
+let col4 = [kEdge, kInner, kInner, kInner, kInner, kInner, kInner, kEdge];
+let gRatingMatrix = new Array(8);
+gRatingMatrix[0] = col1;
+gRatingMatrix[1] = col2;
+gRatingMatrix[2] = col3;
+gRatingMatrix[3] = col4;
+gRatingMatrix[4] = col4;
+gRatingMatrix[5] = col3;
+gRatingMatrix[6] = col2;
+gRatingMatrix[7] = col1;
+//
+
+let col10 = [kCorner, kAroundCorner, kEdge, kEdge, kEdge, kEdge,kEdge,kEdge, kAroundCorner, kCorner];
+let col20 = [kAroundCorner, kAroundCorner,kInner,kInner, kInner, kInner, kInner, kInner, kAroundCorner, kAroundCorner];
+let col30 = [kEdge,kInner,kInner, kInner, kInner, kInner, kInner, kInner, kInner, kEdge];
+let col40 = [kEdge,kInner,kInner, kInner, kInner, kInner, kInner, kInner, kInner, kEdge];
+let gRatingMatrix10On10 = new Array(10);
+gRatingMatrix10On10[0] = col10;
+gRatingMatrix10On10[1] = col20;
+gRatingMatrix10On10[2] = col30;
+gRatingMatrix10On10[3] = col40;
+gRatingMatrix10On10[4] = col40;
+gRatingMatrix10On10[5] = col30;
+gRatingMatrix10On10[6] = col20;
+gRatingMatrix10On10[7] = col10;
 //
 let gDepth = 4;
 
@@ -323,7 +338,7 @@ class GameMaster
         this.matrixPossibilities[i][j] = this.PlayerTurnType;
         if (this.k_Size == 8)
         { 
-            this.strategyScoreAdd = ratingMatrix[i][j]; 
+            this.strategyScoreAdd = gRatingMatrix[i][j]; 
         }
     };
 
@@ -629,13 +644,13 @@ class AI
 
 }
 
-const k_SquareSize = 35;
-let m_Size = 8;
-let m_TrainerMode = false;
-let m_Timer;
-let m_GameActive = false;
-let m_Game    ;
-let m_AI = new AI(m_Game);
+const kSquareSize = 30;
+let mSize = 10;
+let mTrainerMode = false;
+let mTimer;
+let mGameActive = false;
+let mGame    ;
+let mAI = new AI(mGame);
 const m_AIColor = ePawnType.Black;
 let m_Modal = document.getElementById('myModal');
 let m_ModalText = document.getElementById('myModalText');
@@ -655,22 +670,22 @@ function _nextTurn()
 {
   let gameEnd;
   let winner;
-  gameEnd = m_Game.nextTurn();
+  gameEnd = mGame.nextTurn();
   _updateUIStats();
-  winner = m_Game.getWinner(gameEnd);
+  winner = mGame.getWinner(gameEnd);
   _printBoard();
   if (gameEnd)
   {
     _endGameAsWinner(winner);
   }
-  else if(m_AIColor === m_Game.PlayerTurnType)
+  else if(m_AIColor === mGame.PlayerTurnType)
   {
-    m_AI.makeAIMove();
+    mAI.makeAIMove();
     _updateUIStats();
     _printBoard();
-    if(m_Game.boardFull())
+    if(mGame.boardFull())
     {
-      let win = m_Game.getWinner(m_Game.boardFull());
+      let win = mGame.getWinner(mGame.boardFull());
       _endGameAsWinner(win);
     }
   }
@@ -683,15 +698,15 @@ function _updateUIStats()
   let player2 = document.getElementById("stats2-container");
 
 
-  document.getElementById("average-player1").innerHTML = `${ m_Game.m_Stats.Player1.average.toFixed(2) }`;
-  document.getElementById("average-player2").innerHTML = `${ m_Game.m_Stats.Player2.average.toFixed(2) }`;
+  document.getElementById("average-player1").innerHTML = `${ mGame.m_Stats.Player1.average.toFixed(2) }`;
+  document.getElementById("average-player2").innerHTML = `${ mGame.m_Stats.Player2.average.toFixed(2) }`;
 
-  document.getElementById("2pawns-player1").innerHTML = `${ m_Game.m_Stats.Player1.twoPawns }`;
-  document.getElementById("2pawns-player2").innerHTML = `${ m_Game.m_Stats.Player2.twoPawns }`;
-  document.getElementById("score-player1").innerHTML = `${ m_Game.m_Stats.Player1.score }`;
-  document.getElementById("score-player2").innerHTML = `${ m_Game.m_Stats.Player2.score }`;
-  document.getElementById("rounds").innerHTML = `${ m_Game.m_Stats.roundsNum }`;
-  if (m_Game.PlayerTurnType === ePawnType.Black)
+  document.getElementById("2pawns-player1").innerHTML = `${ mGame.m_Stats.Player1.twoPawns }`;
+  document.getElementById("2pawns-player2").innerHTML = `${ mGame.m_Stats.Player2.twoPawns }`;
+  document.getElementById("score-player1").innerHTML = `${ mGame.m_Stats.Player1.score }`;
+  document.getElementById("score-player2").innerHTML = `${ mGame.m_Stats.Player2.score }`;
+  document.getElementById("rounds").innerHTML = `${ mGame.m_Stats.roundsNum }`;
+  if (mGame.PlayerTurnType === ePawnType.Black)
   {
     player2.className = "current-player";
     player1.className = "notcurrent-player";
@@ -706,13 +721,13 @@ function _updateUIStats()
 
 function onChange_TrainMode()
 {
-  if (m_TrainerMode === false)
+  if (mTrainerMode === false)
   {
-    m_TrainerMode = true;
+    mTrainerMode = true;
   }
   else
   {
-    m_TrainerMode = false;
+    mTrainerMode = false;
   }
 }
 
@@ -721,19 +736,19 @@ function _createGameTable()
   let table = document.getElementById("myBoard");
   let html = "";
 
-  for (let i = 0; i < m_Size; i++)
+  for (let i = 0; i < mSize; i++)
   {
     html += "<tr>";
-    for (let j = 0; j < m_Size; j++)
+    for (let j = 0; j < mSize; j++)
     {
       if ((i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1))
       {
-        html += `<td id=cell[${ j }][${ i }]><img id=img[${ j }][${ i }] class="dark" src="piece-0.gif" border=0 width=${ k_SquareSize } height=${ k_SquareSize }></img></td>`;
+        html += `<td id=cell[${ j }][${ i }]><img id=img[${ j }][${ i }] class="dark" src="piece-0.gif" border=0 width=${ kSquareSize } height=${ kSquareSize }></img></td>`;
       }
 
       else
       {
-        html += `<td id=cell[${ j }][${ i }]><img id=img[${ j }][${ i }] class="light" src="piece-0.gif" border=0 width=${ k_SquareSize } height=${ k_SquareSize }></img></td>`;
+        html += `<td id=cell[${ j }][${ i }]><img id=img[${ j }][${ i }] class="light" src="piece-0.gif" border=0 width=${ kSquareSize } height=${ kSquareSize }></img></td>`;
       }
     }
 
@@ -745,9 +760,9 @@ function _createGameTable()
 
 function _printBoard()
 {
-  for (let x = 0; x < m_Size; x++)
+  for (let x = 0; x < mSize; x++)
   {
-    for (let y = 0; y < m_Size; y++)
+    for (let y = 0; y < mSize; y++)
     {
       _updateCellImage(x, y);
     }
@@ -756,18 +771,18 @@ function _printBoard()
 
 function _updateCellImage(i, j)
 {
-  switch (m_Game.Board[i][j].Pawn)
+  switch (mGame.Board[i][j].Pawn)
   {
     case ePawnType.White:
-      m_Game.Board[i][j].Img.src = ePawnImageSrc.White;
+      mGame.Board[i][j].Img.src = ePawnImageSrc.White;
       break;
 
     case ePawnType.Black:
-      m_Game.Board[i][j].Img.src = ePawnImageSrc.Black;
+      mGame.Board[i][j].Img.src = ePawnImageSrc.Black;
       break;
 
     case ePawnType.Empty:
-      m_Game.Board[i][j].Img.src = ePawnImageSrc.Empty;
+      mGame.Board[i][j].Img.src = ePawnImageSrc.Empty;
       break;
 
   }
@@ -776,12 +791,12 @@ function _updateCellImage(i, j)
 
 function onMouseClick_Cell(i, j)
 {
-  if (m_GameActive)
+  if (mGameActive)
   {
-    if (m_Game.isValidMove(i, j))
+    if (mGame.isValidMove(i, j))
     {
-      m_Game.updateMatrixOfPossibilities(i, j);
-      m_Game.makeAMove();
+      mGame.updateMatrixOfPossibilities(i, j);
+      mGame.makeAMove();
       _printBoard();
       _nextTurn();
     }
@@ -790,7 +805,7 @@ function onMouseClick_Cell(i, j)
 
 function onMouseLeave_Cell()
 {
-  if (m_GameActive)
+  if (mGameActive)
   {
     _printBoard();
   }
@@ -798,15 +813,15 @@ function onMouseLeave_Cell()
 
 function _linkBoardToHTML()
 {
-  for (let i = 0; i < m_Size; i++)
+  for (let i = 0; i < mSize; i++)
   {
-    for (let j = 0; j < m_Size; j++)
+    for (let j = 0; j < mSize; j++)
     {
-      m_Game.Board[i][j].Cell = document.getElementById(`cell[${ i }][${ j }]`);
-      m_Game.Board[i][j].Img = document.getElementById(`img[${ i }][${ j }]`);
-      m_Game.Board[i][j].Cell.addEventListener('mouseleave', function () { onMouseLeave_Cell(); });
-      m_Game.Board[i][j].Cell.addEventListener('mouseenter', function () { onMouseEnter_Cell(i, j); });
-      m_Game.Board[i][j].Cell.addEventListener('click', function () { onMouseClick_Cell(i, j); });
+      mGame.Board[i][j].Cell = document.getElementById(`cell[${ i }][${ j }]`);
+      mGame.Board[i][j].Img = document.getElementById(`img[${ i }][${ j }]`);
+      mGame.Board[i][j].Cell.addEventListener('mouseleave', function () { onMouseLeave_Cell(); });
+      mGame.Board[i][j].Cell.addEventListener('mouseenter', function () { onMouseEnter_Cell(i, j); });
+      mGame.Board[i][j].Cell.addEventListener('click', function () { onMouseClick_Cell(i, j); });
     }
   }
 }
@@ -814,41 +829,41 @@ function _linkBoardToHTML()
 function _initBoard()
 {
   _createGameTable();
-  m_Game = new GameMaster(m_Size);
-  m_AI = new AI(m_Game);
+  mGame = new GameMaster(mSize);
+  mAI = new AI(mGame);
   _linkBoardToHTML();
   _printBoard();
 }
 
 function onMouseEnter_Cell(i, j)
 {
-  if (m_GameActive)
+  if (mGameActive)
   {
-    if (m_Game.isValidMove(i, j))
+    if (mGame.isValidMove(i, j))
     {
 
-      m_Game.Board[i][j].Img.src = _getPlayerTurnImage();
-      if (m_TrainerMode)
+      mGame.Board[i][j].Img.src = _getPlayerTurnImage();
+      if (mTrainerMode)
       {
-        m_Game.updateMatrixOfPossibilities(i, j);
-        for (let x = 0; x < m_Size; x++)
+        mGame.updateMatrixOfPossibilities(i, j);
+        for (let x = 0; x < mSize; x++)
         {
-          for (let y = 0; y < m_Size; y++)
+          for (let y = 0; y < mSize; y++)
           {
-            if (m_Game.matrixPossibilities[x][y] !== ePawnType.Empty)
+            if (mGame.matrixPossibilities[x][y] !== ePawnType.Empty)
             {
-              switch (m_Game.matrixPossibilities[x][y])
+              switch (mGame.matrixPossibilities[x][y])
               {
                 case ePawnType.White:
-                  m_Game.Board[x][y].Img.src = ePawnImageSrc.White;
+                  mGame.Board[x][y].Img.src = ePawnImageSrc.White;
                   break;
 
                 case ePawnType.Black:
-                  m_Game.Board[x][y].Img.src = ePawnImageSrc.Black;
+                  mGame.Board[x][y].Img.src = ePawnImageSrc.Black;
                   break;
 
                 case ePawnType.Empty:
-                  m_Game.Board[x][y].Img.src = ePawnImageSrc.Empty;
+                  mGame.Board[x][y].Img.src = ePawnImageSrc.Empty;
                   break;
 
               }
@@ -864,7 +879,7 @@ function onMouseEnter_Cell(i, j)
 function _getPlayerTurnImage()
 {
   let res = null;
-  switch (m_Game.PlayerTurnType)
+  switch (mGame.PlayerTurnType)
   {
     case ePawnType.Black:
       res = ePawnImageSrc.Black;
@@ -891,21 +906,21 @@ function _startGame()
 {
   _erasePrevBoard();
   _initBoard();
-  m_GameActive = true;
+  mGameActive = true;
   _updateUIStats();
   _startTimer();
-  document.getElementById("average-player1").innerHTML = `${ m_Game.m_Stats.Player1.average.toFixed(2) }`;
-  document.getElementById("average-player2").innerHTML = `${ m_Game.m_Stats.Player2.average.toFixed(2) }`;
+  document.getElementById("average-player1").innerHTML = `${ mGame.m_Stats.Player1.average.toFixed(2) }`;
+  document.getElementById("average-player2").innerHTML = `${ mGame.m_Stats.Player2.average.toFixed(2) }`;
   document.getElementById("stop").disabled = false;
 
   let temp = new Date();
-  if (m_Game.PlayerTurnType === ePawnType.White)
+  if (mGame.PlayerTurnType === ePawnType.White)
   {
-    m_Game.m_Stats.Player1.roundTimePlayer.push(temp.getTime());
+    mGame.m_Stats.Player1.roundTimePlayer.push(temp.getTime());
   }
   else
   {
-    m_Game.m_Stats.Player2.roundTimePlayer.push(temp.getTime());
+    mGame.m_Stats.Player2.roundTimePlayer.push(temp.getTime());
   }
 
 };
@@ -918,7 +933,7 @@ function _startTimer()
   let secondsLabel = document.getElementById("seconds");
   let totalSeconds = 0;
   let timer = setInterval(setTime, 1000);
-  m_Timer = timer;
+  mTimer = timer;
 
   function setTime()
   {
@@ -953,7 +968,7 @@ function _endGameAsWinner(winner)
   document.getElementById("stop").disabled = true;
   let table = document.getElementById("myBoard");
   table.className = "game-off";
-  m_GameActive = false;
+  mGameActive = false;
 
 }
 
@@ -961,21 +976,21 @@ function _endGame()
 {
   // @ts-ignore
   document.getElementById("start").disabled = false;
-  clearInterval(m_Timer);
+  clearInterval(mTimer);
 }
 
 function _modifyBoardSize(size)
 {
-  m_Size = size;
+  mSize = size;
 }
 
 function onClick_Stop()
 {
-  if (m_Game.PlayerTurnType === ePawnType.White)
+  if (mGame.PlayerTurnType === ePawnType.White)
   {
     _endGameAsWinner(ePawnType.Black);
   }
-  else if (m_Game.PlayerTurnType === ePawnType.Black)
+  else if (mGame.PlayerTurnType === ePawnType.Black)
   {
     _endGameAsWinner(ePawnType.White);
   }
